@@ -274,6 +274,82 @@ if (!provMatch) {
 }
 
 // =========================================================================
+section(6, 'Cache-busted assets carry the version their content earns');
+
+/*
+ * WHY THIS EXISTS. vercel.json serves /assets/* as `max-age=31536000, immutable`.
+ * A visitor who loaded the site before an edit keeps the OLD file for a YEAR and
+ * never revalidates, so shipping a changed stylesheet under an unchanged ?v= does
+ * not "mostly work" — it breaks the page for everyone who came earlier, silently,
+ * and stays broken.
+ *
+ * It happened. style.css gained the visualisation styles and shipped still reading
+ * ?v=1, with a comment directly above that line saying to bump it. The comment was
+ * right there and the step was still missed, twice in one day.
+ *
+ * A COMMENT IS NOT A MECHANISM. asset-versions.json records the sha256 each version
+ * was cut from; this asserts the file still hashes to it and that every page asks
+ * for that version. Change the file and the hash moves, so the check goes red until
+ * the version is bumped in the record and in the HTML.
+ *
+ * THE RESIDUAL TRUST, NAMED. Someone can rewrite a sha in the record without
+ * bumping v, and this goes quiet. That is a deliberate act of editing a file whose
+ * only purpose is this check — not the forgotten step it replaces. Same shape as
+ * the connector provenance block above: the guard makes the lie explicit rather
+ * than impossible.
+ */
+const PAGES = readdirSync(ROOT).filter((f) => f.endsWith('.html'));
+let versions = null;
+try {
+  versions = JSON.parse(read('scripts/asset-versions.json'));
+} catch (e) {
+  fail(`asset-versions.json missing or unreadable: ${e.message}`);
+}
+
+if (versions) {
+  const names = Object.keys(versions);
+  if (names.length === 0) {
+    fail('asset-versions.json is empty — this section would check nothing');
+  }
+  for (const name of names) {
+    const rec = versions[name];
+    let actual = null;
+    try {
+      actual = createHash('sha256').update(readFileSync(join(ROOT, 'assets', name))).digest('hex');
+    } catch {
+      fail(`assets/${name} is recorded in asset-versions.json but not on disk`);
+      continue;
+    }
+
+    if (actual !== rec.sha256) {
+      fail(
+        `assets/${name} CHANGED without a version bump — it is served immutable for a year, ` +
+          `so returning visitors keep the old copy. Bump "v" to ${Number(rec.v) + 1} in ` +
+          `scripts/asset-versions.json, set its sha256 to ${actual.slice(0, 16)}…, and update ` +
+          `?v= in: ${PAGES.join(', ')}`,
+      );
+      continue;
+    }
+    pass(`assets/${name} matches the sha recorded for v${rec.v}`);
+
+    // Every page must ASK for that version. A record nobody references is not a
+    // cache-busting scheme; it is a file.
+    let referenced = 0;
+    for (const page of PAGES) {
+      const src = read(page);
+      const refs = [...src.matchAll(new RegExp(`/assets/${name.replace(/[.]/g, '\\.')}(\\?v=([0-9]+))?`, 'g'))];
+      for (const m of refs) {
+        referenced++;
+        if (m[2] === undefined) fail(`${page} loads /assets/${name} with NO ?v= — it will never revalidate`);
+        else if (m[2] !== String(rec.v)) fail(`${page} asks for /assets/${name}?v=${m[2]}, but the file on disk is v${rec.v}`);
+      }
+    }
+    if (referenced === 0) fail(`no page references /assets/${name} — the recorded version guards nothing`);
+    else pass(`  …and all ${referenced} reference(s) ask for v${rec.v}`);
+  }
+}
+
+// =========================================================================
 console.log('');
 if (failures.length) {
   console.log(`FAILED — ${failures.length} problem(s):`);

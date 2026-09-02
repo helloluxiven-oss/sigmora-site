@@ -15,8 +15,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
-     Bump ?v= on every change to this file, or visitors keep the old stylesheet. -->
-<link rel="stylesheet" href="/assets/style.css?v=1">
+     Bump ?v= on every change, AND update scripts/asset-versions.json — check-claims
+     section 6 compares the file hash to that record and fails if they disagree. -->
+<link rel="stylesheet" href="/assets/style.css?v=2">
 <style>
   /* ---------- page header ---------- */
   .uc-head{padding:56px 0 0}
@@ -383,7 +384,7 @@ render();
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year,
      and this file holds the contact address. Bump ?v= when CONTACT changes, or the
      old address survives in visitors' caches long after the edit. -->
-<script src="/assets/cta.js?v=1"></script>
+<script src="/assets/cta.js?v=2"></script>
 
 </body>
 </html>

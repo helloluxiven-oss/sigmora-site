@@ -16,8 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
-     Bump ?v= on every change to this file, or visitors keep the old stylesheet. -->
-<link rel="stylesheet" href="/assets/style.css?v=1">
+     Bump ?v= on every change, AND update scripts/asset-versions.json — check-claims
+     section 6 compares the file hash to that record and fails if they disagree. -->
+<link rel="stylesheet" href="/assets/style.css?v=2">
 </head>
 <body>
 
@@ -75,22 +76,21 @@
       </p>
     </div>
 
-    <!-- PLACEHOLDER FRAME. Holds a 16:9 box via `aspect-ratio:16/9` in .demo-frame —
-         the ratio is this element's own geometry, not a measurement of anything.
-         To ship the real recording: replace .demo-mid and .demo-tag with a single
-         <video controls poster="…"><source src="…" type="video/mp4"></video>.
-         .demo-frame > video already fills the box, so nothing else moves. Note the
-         CSP in vercel.json allows media from 'self' only — self-host the file. -->
+    <!-- The recording, self-hosted. No iframe: an embed would need frame-src in the CSP
+         and would bring third-party cookies to a page whose argument is that nothing
+         leaves your machine. `media-src` is not set in vercel.json, so it falls back to
+         `default-src 'self'` — which a file served from /assets satisfies.
+
+         Encoded from the source capture with `-an` (no audio track at all), CRF 21 at
+         native 720p — the source is 1280x720, and upscaling would add bytes, not detail.
+         The frame is aspect-ratio 16/9 and the file is 16:9, so it fills exactly.
+
+         No autoplay, no loop, no muted-autoplay: it starts when a person asks it to. -->
     <div class="demo-frame">
-      <span class="demo-tag">Placeholder — no recording yet</span>
-      <div class="demo-mid">
-        <div class="demo-play">&#9654;</div>
-        <b>The recording drops in here.</b>
-        <p>
-          This frame is the finished 16:9 shape and size. Nothing around it changes when the real
-          capture replaces it.
-        </p>
-      </div>
+      <video controls playsinline preload="metadata"
+             poster="/assets/demo-poster.jpg?v=1" width="1280" height="720">
+        <source src="/assets/demo.mp4?v=1" type="video/mp4">
+      </video>
     </div>
 
     <!-- Same discipline as the use-cases panels, which carry an "Illustrative" badge and
@@ -106,7 +106,7 @@
          detail (contract values, month-one targets) is deliberately not repeated:
          those are outputs of one run, not properties of the product. -->
     <p class="demo-note">
-      <b>What it will show.</b> The run recorded in the brief: <em>“Draft a plan to launch a new
+      <b>What it shows.</b> The run recorded in the brief: <em>“Draft a plan to launch a new
       product next month — have marketing, sales, and finance each contribute.”</em> The CEO agent
       reads context, then delegates to the Marketing, Sales and Finance department heads — Sales in
       turn pulls in its own analyst — and synthesises their work into one consolidated go-to-market
@@ -483,7 +483,7 @@
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year,
      and this file holds the contact address. Bump ?v= when CONTACT changes, or the
      old address survives in visitors' caches long after the edit. -->
-<script src="/assets/cta.js?v=1"></script>
+<script src="/assets/cta.js?v=2"></script>
 
 <script>
 /* The org visualisation. Vanilla, no library, no network.

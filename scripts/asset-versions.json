@@ -1,0 +1,18 @@
+{
+  "style.css": {
+    "v": 2,
+    "sha256": "667c3d2d755a0cc8a1f0b4f5e754242d350528d6dd6dfdb3df2c6216a19dc73f"
+  },
+  "cta.js": {
+    "v": 2,
+    "sha256": "44c35fa12e23ffb82b581d0b31a96a5ea3000d561fc57c364525346bb19d0d37"
+  },
+  "demo.mp4": {
+    "v": 1,
+    "sha256": "51b99641c3ad50400ff1d83a12cdf17b1032f557d0a8d2b21d7240971329f279"
+  },
+  "demo-poster.jpg": {
+    "v": 1,
+    "sha256": "4b4ddd0677e91835b3c8098f65236a55b5ea7525c44629adddf5ef9f1ab5db37"
+  }
+}
