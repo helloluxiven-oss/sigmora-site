@@ -14,40 +14,101 @@
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;450;500;600&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
+     Bump ?v= on every change to this file, or visitors keep the old stylesheet. -->
+<link rel="stylesheet" href="/assets/style.css?v=1">
 </head>
 <body>
 
+<!-- Every CTA below carries data-cta and ships with an in-page href="#contact"
+     fallback. assets/cta.js upgrades each to the real mailto from a single CONTACT
+     constant — the address is written once, for the whole site, in that file. With
+     scripting off the buttons scroll to the contact section rather than pointing at
+     a wrong or dead address. -->
 <nav class="nav">
   <a class="brand" href="/"><img src="/assets/icon-192.png" alt="">SIGMORA</a>
   <div class="navlinks">
+    <a href="/#demo">Demo</a>
     <a href="/#how">How it works</a>
-    <a href="/#numbers">Deterministic numbers</a>
-    <a href="/#connectors">Connectors</a>
+    <a href="/#local">Local-first</a>
     <a href="/use-cases">Use cases</a>
   </div>
-  <a class="cta-sm" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
+  <a class="cta-sm" data-cta href="#contact">Request early access</a>
 </nav>
 
+
+<!-- ===== 1. HERO ================================================== -->
 <header class="hero">
   <div class="wrap">
-    <div class="status"><span class="dot"></span>In active development — this is an early look</div>
-    <h1>An AI company that runs your business.</h1>
+    <div class="status"><span class="dot"></span>In active development — an early look, not generally available</div>
+
+    <!-- Headline and subhead compress launch-brief §1 ("What it is", one line for a
+         non-technical founder). No claim here that the brief does not make. -->
+    <h1>Describe your business. Get a team of agents that runs it.</h1>
+
     <p class="lede">
       SIGMORA Agentic OS is a <strong>local-first desktop app</strong> that turns a plain-English
       description of your business into a working team of AI agents — a CEO agent that delegates to
-      department heads and workers — which actually run your workflows and produce real deliverables:
-      reports, plans, spreadsheets. On your own machine.
+      department heads and workers — which actually run your workflows and produce real
+      deliverables: reports, plans and spreadsheets, on your own machine.
     </p>
+
     <div class="btnrow">
-      <a class="btn btn-1" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
-      <a class="btn btn-2" href="/use-cases">See what it runs</a>
-      <span class="btnnote">No public download yet — nothing ships until it's ready.</span>
+      <a class="btn btn-1" data-cta href="#contact">Request early access</a>
+      <a class="btn btn-2" href="#demo">Watch the demo</a>
+      <span class="btnnote">There is no public download yet.</span>
     </div>
   </div>
 </header>
 
+
+<!-- ===== 2. DEMO ================================================== -->
+<section class="band inset" id="demo">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="eyebrow">Demo</div>
+      <h2>One instruction, a whole department deep.</h2>
+      <p>
+        The clearest way to show what this is, is to watch a single instruction travel down the org
+        and come back as a finished piece of work.
+      </p>
+    </div>
+
+    <!-- PLACEHOLDER FRAME. Holds a 16:9 box via `aspect-ratio:16/9` in .demo-frame —
+         the ratio is this element's own geometry, not a measurement of anything.
+         To ship the real recording: replace .demo-mid and .demo-tag with a single
+         <video controls poster="…"><source src="…" type="video/mp4"></video>.
+         .demo-frame > video already fills the box, so nothing else moves. Note the
+         CSP in vercel.json allows media from 'self' only — self-host the file. -->
+    <div class="demo-frame">
+      <span class="demo-tag">Placeholder — no recording yet</span>
+      <div class="demo-mid">
+        <div class="demo-play">&#9654;</div>
+        <b>The recording drops in here.</b>
+        <p>
+          This frame is the finished 16:9 shape and size. Nothing around it changes when the real
+          capture replaces it.
+        </p>
+      </div>
+    </div>
+
+    <!-- The run described below is launch-brief §7, "What it can do right now", quoted
+         as the verified end-to-end run it records there. The brief's per-department
+         detail (contract values, month-one targets) is deliberately not repeated:
+         those are outputs of one run, not properties of the product. -->
+    <p class="demo-note">
+      <b>What it will show.</b> The run recorded in the brief: <em>“Draft a plan to launch a new
+      product next month — have marketing, sales, and finance each contribute.”</em> The CEO agent
+      reads context, then delegates to the Marketing, Sales and Finance department heads — Sales in
+      turn pulls in its own analyst — and synthesises their work into one consolidated go-to-market
+      plan, with a section per department. The delegation streams live as it happens.
+    </p>
+  </div>
+</section>
+
+
+<!-- ===== 3. HOW IT WORKS ========================================== -->
 <section class="band" id="how">
   <div class="wrap">
     <div class="band-head">
@@ -60,12 +121,28 @@
       </p>
     </div>
 
-    <div class="grid g2">
-      <div class="box">
-        <h3>The org tree</h3>
+    <div class="grid g3">
+      <!-- Step one: launch-brief, "Describe-to-build (the Business Architect)". -->
+      <div class="box step">
+        <div class="eyebrow">Step one</div>
+        <h3>You describe it</h3>
+        <p>
+          Describe your business in plain English. It generates a complete agent org — the roles, the
+          delegation tree, starter workflows and a data plan.
+        </p>
+        <p>
+          An “Improve my org” advisor reads your <strong>real run history</strong> afterwards and
+          proposes concrete changes.
+        </p>
+      </div>
+
+      <!-- Step two: launch-brief §2, "The architecture — how the multi-agent hierarchy works". -->
+      <div class="box step">
+        <div class="eyebrow">Step two</div>
+        <h3>It builds the org</h3>
         <p>
           An org is a <strong>tree of agent nodes</strong>: a lead orchestrator — the CEO — leading
-          department heads (Marketing, Sales, Finance…), which lead workers.
+          department heads for Marketing, Sales, Finance and the rest, which in turn lead workers.
         </p>
         <p>
           Each node is a role, its own system instructions, a model, a tool allowlist, and its direct
@@ -73,120 +150,170 @@
         </p>
       </div>
 
-      <div class="box">
-        <h3>Delegation that bubbles up</h3>
+      <!-- Step three: launch-brief §2 (delegation) and §3 (the model routes, code
+           computes). The deterministic-numbers line belongs here rather than in its
+           own section: it is what makes a delivered report usable. -->
+      <div class="box step">
+        <div class="eyebrow">Step three</div>
+        <h3>They do the work</h3>
         <p>
-          Every manager node is given a <code>delegate</code> tool scoped to its
-          <strong>direct reports only</strong>.
+          Every manager holds a <code>delegate</code> tool scoped to its <strong>direct reports
+          only</strong>. Calling it spawns a fresh, isolated run for that child, then returns the
+          result to the parent. Results bubble up, and the lead synthesises the final answer.
         </p>
         <p>
-          Calling it spawns a fresh, isolated agent run for that child — with the child's own role,
-          instructions, model and tools — runs it to completion, and returns the result to the parent.
-          Results bubble up the tree, and the lead synthesises the final answer.
-        </p>
-      </div>
-
-      <div class="box">
-        <h3>How agents get tools and models</h3>
-        <p>
-          When a node runs it resolves its model — a per-tier default for lead, sub-agent or worker,
-          or a per-node override — and is handed only the tools on its allowlist: file I/O,
-          knowledge-vault search, deterministic compute, document and spreadsheet generation, plus
-          extensible MCP servers and custom HTTP tools.
-        </p>
-        <p>Any risky or irreversible tool is wrapped in a <strong>human approval gate</strong>.</p>
-      </div>
-
-      <div class="box">
-        <h3>Rails, audit trail, kill-switch</h3>
-        <p>
-          Hard caps on delegation depth, number of agent runs, total iterations, per-tool call budgets
-          and wall-clock time — the clock is shared across the whole run, so one limit winds the
-          entire tree down rather than leaving branches spinning.
-        </p>
-        <p>
-          A full audit trail of every start, delegation, tool call and result. And a privacy
-          <strong>kill-switch</strong> — Internal mode — that forces every agent, lead and workers
-          alike, onto a local model and blocks all cloud traffic.
+          Anything carrying a number is assembled by <strong>code, not the model</strong> — totals,
+          metrics and tables are computed exactly. The model writes the prose around them.
         </p>
       </div>
     </div>
-  </div>
-</section>
 
-<section class="band" id="numbers">
-  <div class="wrap">
-    <div class="band-head">
-      <div class="eyebrow">The architectural bet</div>
-      <h2>The model is a router. It never authors data.</h2>
-      <p>
-        LLMs hallucinate figures, which is a non-starter for anything touching finance or reporting.
-        The fix here is architectural, not a bigger model.
-      </p>
-    </div>
-
-    <dl class="rails">
+    <!-- launch-brief §2, "Safety rails built into the engine". -->
+    <dl class="rails" style="margin-top:34px">
       <div class="rail">
-        <dt>Tools return structured objects</dt>
-        <dd>Not prose the next step has to re-read and re-interpret.</dd>
-      </div>
-      <div class="rail">
-        <dt>Code assembles anything with a number</dt>
+        <dt>It cannot run away</dt>
         <dd>
-          Totals, metrics and tables are computed deterministically, so the figures in a report are
-          exact and are never invented by the model.
+          Hard caps on delegation depth, number of agent runs, total iterations, per-tool call
+          budgets and wall-clock time. The clock is shared across the whole run, so one limit winds
+          the entire tree down rather than leaving branches spinning.
         </dd>
       </div>
       <div class="rail">
-        <dt>The model writes the prose around them</dt>
+        <dt>You sign off on risk</dt>
         <dd>
-          It decides what to do and who to delegate to. It does not type the numbers you report on.
+          Any risky or irreversible tool is wrapped in a human approval gate. It pauses and waits for
+          you before it runs.
         </dd>
       </div>
       <div class="rail">
-        <dt>Which is why a small local model is still safe here</dt>
+        <dt>Everything is on the record</dt>
         <dd>
-          Trustworthiness for money and reporting comes from where the figures are computed, not from
-          the size of the model doing the routing.
+          A full audit trail of every start, every delegation, every tool call and every result.
         </dd>
       </div>
     </dl>
   </div>
 </section>
 
-<section class="band" id="connectors">
+
+<!-- ===== 4. WHY LOCAL-FIRST ======================================= -->
+<section class="band inset" id="local">
   <div class="wrap">
     <div class="band-head">
-      <div class="eyebrow">Connectors</div>
-      <h2>Wired to the tools you already run.</h2>
+      <div class="eyebrow">Why local-first</div>
+      <h2>Private mode is a switch, not a promise.</h2>
       <p>
-        Every connector is MCP-backed: you register the server, choose which of its tools it grants,
-        and attach it to the agents that should hold it. Nothing is connected by default, and an agent
-        only ever sees what you gave it.
+        Most tools ask you to trust a policy. This one is a desktop app, so the question of what
+        leaves your machine has an answer you can enforce rather than a paragraph you have to
+        believe.
       </p>
     </div>
 
-    <div class="conns" id="conns"></div>
+    <div class="grid g2">
+      <!-- launch-brief §5 (tech stack: Electron, Windows installer) and the feature
+           list ("Three ways to use it"). -->
+      <div class="box">
+        <h3>It installs on your machine</h3>
+        <p>
+          A packaged desktop app that runs on your own hardware, alongside a web UI and a terminal
+          client for the same engine.
+        </p>
+        <p>
+          Your knowledge base is a <strong>local Markdown vault</strong> — ordinary files in
+          ordinary folders, on your disk, that your agents read from and write to.
+        </p>
+      </div>
 
-    <p class="provenance">
-      This list is generated from the product's own connector catalogue rather than written by hand,
-      so the site can't quietly claim an integration the app doesn't offer.
+      <!-- launch-brief §2 (kill-switch) and §4 ("A hard privacy kill-switch").
+           "Private mode" is the shipped UI label, not a name written for this page:
+           see apps/web/app/components/Rail.tsx and app/api/models/route.ts in the
+           product repo, which render "Private mode" to the user. The brief calls the
+           same flag "Internal mode", which is the internal name for it in the engine. -->
+      <div class="box">
+        <h3>Private mode forces every agent local</h3>
+        <p>
+          One toggle forces <strong>every</strong> agent — the lead and every worker under it — onto
+          a local model, and blocks all cloud traffic. Not a default that a per-agent override can
+          quietly undo.
+        </p>
+        <p>
+          Cloud models are bring-your-own-key and stay inert while it is on. Local models run through
+          Ollama, with no key and no account.
+        </p>
+      </div>
+    </div>
+
+    <p class="provenance" style="margin-top:26px">
+      Connectors are the surface that <em>can</em> reach outside, so they are the surface Private
+      mode cuts off. Each one is MCP-backed: you register the server, choose which of its tools it
+      grants, and attach it to the agents that should hold it. Nothing is connected by default. This
+      list is generated from the product's own connector catalogue rather than written by hand, so
+      the site cannot quietly claim an integration the app does not offer.
     </p>
+
+    <div class="conns" id="conns" style="margin-top:20px"></div>
   </div>
 </section>
 
-<section class="band notclaimed">
+
+<!-- ===== 5. USE CASES ============================================= -->
+<section class="band" id="use-cases">
   <div class="wrap">
     <div class="band-head">
-      <div class="eyebrow">What we're not claiming</div>
-      <h2>The limits, stated up front.</h2>
+      <div class="eyebrow">Use cases</div>
+      <h2>What people actually point it at.</h2>
       <p>
-        Marketing pages tend to go quiet exactly where a product is weakest. Here is where this one
-        is today.
+        Departments, workflows and automations an agent org can run. Three below; the rest are on
+        the use-cases page.
       </p>
     </div>
 
-    <dl class="nc-list">
+    <!-- All three are quoted verbatim from the DATA block in use-cases.html — the same
+         copy the claim guard already scans — rather than rewritten for this page. -->
+    <div class="grid g3">
+      <a class="pick" href="/use-cases">
+        <div class="dept">Finance</div>
+        <h3>Reconcile supplier invoices against the ledger</h3>
+        <p>
+          The Finance Agent matches invoices to what was actually delivered, flags the gaps, and
+          shows its working — every figure traced to a source row.
+        </p>
+      </a>
+      <a class="pick" href="/use-cases">
+        <div class="dept">Operations</div>
+        <h3>Route the day's jobs and chase the exceptions</h3>
+        <p>
+          Operations agents watch the queue, escalate what's stuck, and post a single shift summary
+          to Slack instead of a stream of separate pings.
+        </p>
+      </a>
+      <a class="pick" href="/use-cases">
+        <div class="dept">Sales</div>
+        <h3>Account research before every call</h3>
+        <p>
+          The Research Agent reads your vault, the account's recent mail and the notes in Sheets,
+          then returns a one-page brief on what changed and where you fit.
+        </p>
+      </a>
+    </div>
+
+    <!-- The count is the length of the DATA array in use-cases.html, which currently
+         holds sixteen cards. scripts/check-claims.mjs section 0 fails the build if that
+         array drops below twelve, so this figure cannot silently drift far from true;
+         re-count and edit here if cards are added. -->
+    <a class="morelink" href="/use-cases">See all 16 use cases <span>&rarr;</span></a>
+  </div>
+</section>
+
+
+<!-- ===== 6. CLOSING CTA =========================================== -->
+<section class="cta" id="contact">
+  <div class="wrap">
+
+    <!-- These five are the launch brief's own "Accuracy notes" plus the two claims the
+         README records as cut for lack of support in the code. They are rendered rather
+         than omitted: an absent limitation reads as a limitation that does not exist. -->
+    <dl class="nc-list" style="text-align:left;margin-bottom:56px">
       <div class="nc">
         <dt>Semantic search</dt>
         <dd>
@@ -198,7 +325,7 @@
         <dt>Headless background service</dt>
         <dd>
           Scheduled workflows fire <b>while the app is resident in your system tray</b>. It is not a
-          fully headless service that runs without it.
+          service that runs without it.
         </dd>
       </div>
       <div class="nc">
@@ -215,36 +342,36 @@
       <div class="nc">
         <dt>Available now</dt>
         <dd>
-          <b>In active development</b>, built against real day-to-day work rather than a demo dataset.
-          There is no public download yet.
+          <b>In active development</b>, built against real day-to-day work rather than a demo
+          dataset. There is no public download.
         </dd>
       </div>
     </dl>
+
+    <h2>An early look, not generally available yet.</h2>
+    <p>
+      Built solo, against real work rather than a demo dataset. There is no installer to hand you
+      today. If it looks like it would fit what you do, say hello — I'll get in touch when there is
+      something to install.
+    </p>
+    <div class="btnrow">
+      <a class="btn btn-1" data-cta href="#contact">Request early access</a>
+      <a class="btn btn-2" href="/use-cases">Browse the use cases</a>
+    </div>
+    <a class="cta-addr" data-cta data-cta-addr href="#contact"></a>
   </div>
 </section>
 
-<section class="cta">
-  <div class="wrap">
-    <h2>Want an early look?</h2>
-    <p>
-      Built solo, against real work rather than a demo dataset. If it looks like it would fit what you
-      do, say hello — I'll get in touch when there's something to install.
-    </p>
-    <div class="btnrow">
-      <a class="btn btn-1" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
-      <a class="btn btn-2" href="/use-cases">Browse the use cases</a>
-    </div>
-  </div>
-</section>
 
 <footer>
   <div class="wrap foot">
     <span>SIGMORA Agentic OS</span>
-    <span>Local-first · Auditable · Privacy by design</span>
+    <span>Local-first &middot; Auditable &middot; Privacy by design</span>
     <span class="sp"><a href="/use-cases">Use cases</a></span>
-    <span><a href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20hello">Contact</a></span>
+    <span><a data-cta data-cta-subject="hello" href="#contact">Contact</a></span>
   </div>
 </footer>
+
 
 <!-- Connector catalogue. Synced from the product source; see scripts/sync-connectors.mjs
      and the _source block for provenance. Do not hand-edit. -->
@@ -271,13 +398,18 @@
 }
 </script>
 
+<!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year,
+     and this file holds the contact address. Bump ?v= when CONTACT changes, or the
+     old address survives in visitors' caches long after the edit. -->
+<script src="/assets/cta.js?v=1"></script>
+
 <script>
 (function () {
   var el = document.getElementById('connector-data');
   var host = document.getElementById('conns');
   if (!el || !host) return;
   var data = JSON.parse(el.textContent);
-  host.innerHTML = data.connectors.map(function (c) {
+  host.innerHTML = data.connectors.map(function () {
     return '<div class="conn"><b></b><span></span></div>';
   }).join('');
   // Set text via textContent so a blurb can never inject markup.

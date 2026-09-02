@@ -1,20 +1,52 @@
 /* SIGMORA marketing site — shared styles.
-   Palette and type carried over from the internal use-cases page so the public
-   site reads as the same product. Appearance only: no figure in the source
-   material travelled with it. */
+
+   Palette, type scale and radii are read out of design-reference/ so the site and
+   the desktop app read as one product rather than two. Values only: every figure,
+   label and name in those reference files is a placeholder and none of them travel.
+
+   Source for each group is noted beside it. The reference files are app-scale
+   (9px micro-labels, 12px body); the ratios are kept and the absolute sizes are
+   stepped up for a page read at arm's length rather than in a window. */
 
 :root{
-  --bg:#191917;
-  --card:#201F1D;
-  --card-hover:#25241f;
-  --line:#302E29;
-  --line-soft:#282723;
-  --ink:#F2EFE7;
-  --ink-2:#B8B3A6;
-  --ink-3:#8A857A;
-  --accent:#D4A15E;
-  --mini:#17171A;
-  --mini-line:#2E2D33;
+  /* Surfaces — design-reference/01-dashboard-and-sidebar.html body/.sg-wrap/.sg-side/.sg-card */
+  --bg:#07070d;          /* page */
+  --panel:#0a0a11;       /* nav, footer, inset bands */
+  --band:#0d0d14;        /* alternating section */
+  --card:#10101c;
+  --card-hover:#141426;
+  --card-2:#12121f;
+
+  /* Rules — .sg-wrap #23233a outer, .sg-side #1e1e30 divider, .sg-nrow #1a1a2b row */
+  --line:#23233a;
+  --line-soft:#1e1e30;
+  --line-row:#1a1a2b;
+  --line-chip:#2a2a45;
+
+  /* Ink — .sg-h h3 #f0f0f7 → .sg-nav #9a9ab5 → .sg-kl #6f6f8c → .sg-lbl #4a4a63 */
+  --ink:#f0f0f7;
+  --ink-1:#e2e2ee;
+  --ink-2:#9a9ab5;
+  --ink-3:#6f6f8c;
+  --ink-4:#5c5c78;
+  --micro:#4a4a63;
+
+  /* Violet — .sg-logo gradient, .sg-btn #7c3aed, .ag-av text #a78bfa, .ag-rep #181830/#322f55 */
+  --accent:#a78bfa;      /* accent AS TEXT: #7c3aed fails contrast on #07070d */
+  --violet:#7c3aed;      /* accent as a FILL */
+  --violet-lift:#8b5cf6;
+  --violet-bg:#181830;
+  --violet-line:#322f55;
+
+  /* Green = live / local / verified — .sg-dot.run, .ag-tool #16301f on #22c55e */
+  --green:#22c55e;
+  --green-bg:#16301f;
+  --green-line:#1e3a28;
+
+  /* Mini mock-up chrome on the use-cases page */
+  --mini:#0f0f1a;
+  --mini-line:#262640;
+
   --wrap:1180px;
 }
 
@@ -23,165 +55,231 @@ html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{
   background:var(--bg);
   color:var(--ink);
+  /* design-reference uses system-ui throughout. Inter is the same idiom and holds
+     up at display sizes, which the app never needs; system-ui backs it up. */
   font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
-  padding:0 0 0;
   line-height:1.5;
 }
 a{color:inherit}
 
-/* ---------- top nav ---------- */
+/* ---------- top nav — .sg-side / .ag-top ---------- */
 .nav{
   display:flex;align-items:center;gap:36px;
-  padding:20px 40px;
+  padding:16px 40px;
   border-bottom:1px solid var(--line-soft);
-  position:sticky;top:0;background:rgba(25,25,23,.92);
+  position:sticky;top:0;background:rgba(10,10,17,.88);
   backdrop-filter:blur(10px);z-index:20;
 }
 .brand{
-  display:flex;align-items:center;gap:10px;
-  font-family:'Newsreader',Georgia,serif;font-size:23px;letter-spacing:.01em;
-  text-decoration:none;
+  display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:600;letter-spacing:.005em;
+  text-decoration:none;color:var(--ink);
 }
-.brand img{width:26px;height:26px;border-radius:7px;display:block}
-.navlinks{display:flex;gap:26px;margin-left:auto;font-size:14.5px;color:var(--ink-2)}
+.brand img{width:22px;height:22px;border-radius:7px;display:block}
+.navlinks{display:flex;gap:24px;margin-left:auto;font-size:13.5px;color:var(--ink-2)}
 .navlinks a{padding:6px 2px;text-decoration:none}
-.navlinks a:hover{color:var(--ink)}
-.navlinks a.on{color:var(--ink)}
+.navlinks a:hover,.navlinks a.on{color:var(--ink)}
 .cta-sm{
-  margin-left:26px;padding:8px 18px;border-radius:8px;
-  background:var(--ink);color:#1A1917;font-size:14px;font-weight:500;
+  margin-left:22px;padding:8px 16px;border-radius:8px;
+  background:var(--violet);color:#fff;font-size:13.5px;font-weight:600;
   text-decoration:none;white-space:nowrap;
 }
-.cta-sm:hover{background:#fff}
+.cta-sm:hover{background:var(--violet-lift)}
 
-/* ---------- layout ---------- */
+/* ---------- layout + type scale ---------- */
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 40px}
-section{padding:0}
-h1{
-  font-family:'Newsreader',Georgia,serif;font-weight:400;
-  font-size:56px;letter-spacing:-.015em;line-height:1.1;
-}
-h2{
-  font-family:'Newsreader',Georgia,serif;font-weight:400;
-  font-size:36px;letter-spacing:-.012em;line-height:1.2;margin-bottom:14px;
-}
-h3{
-  font-family:'Newsreader',Georgia,serif;font-weight:400;
-  font-size:22px;letter-spacing:-.01em;margin-bottom:9px;line-height:1.25;
-}
-.sub{font-size:18px;color:var(--ink-2)}
+h1{font-size:54px;font-weight:600;letter-spacing:-.03em;line-height:1.07}
+h2{font-size:34px;font-weight:600;letter-spacing:-.022em;line-height:1.18;margin-bottom:14px}
+h3{font-size:19px;font-weight:600;letter-spacing:-.012em;line-height:1.3;margin-bottom:9px}
+.sub{font-size:17px;color:var(--ink-2)}
+
+/* .sg-lbl / .ag-pl: uppercase, heavily tracked, dim. The app sets 9px/.09em; a
+   page is read further away, so the size steps up and the tracking with it. */
 .eyebrow{
-  font-size:12px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink-3);margin-bottom:16px;font-weight:500;
+  font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:14px;font-weight:700;
 }
 
 /* ---------- hero ---------- */
-.hero{padding:96px 0 84px;border-bottom:1px solid var(--line-soft)}
-.hero h1{max-width:16ch;margin-bottom:26px}
-.hero .lede{font-size:19px;line-height:1.6;color:var(--ink-2);max-width:62ch;margin-bottom:20px}
-.hero .lede strong{color:var(--ink);font-weight:500}
+.hero{padding:88px 0 76px;border-bottom:1px solid var(--line-soft)}
+.hero h1{max-width:17ch;margin-bottom:24px}
+.hero .lede{font-size:18px;line-height:1.65;color:var(--ink-2);max-width:64ch}
+.hero .lede strong{color:var(--ink-1);font-weight:600}
 
-/* honest status line — the social copy says "early look", so the site does too */
+/* Status pill — .ag-rep (violet-tinted chip) with the .sg-dot.run pulse */
 .status{
   display:inline-flex;align-items:center;gap:9px;
-  border:1px solid var(--line);border-radius:999px;
-  padding:7px 15px 7px 12px;font-size:13.5px;color:var(--ink-2);
-  margin-bottom:30px;
+  background:var(--violet-bg);border:1px solid var(--violet-line);border-radius:999px;
+  padding:6px 15px 6px 12px;font-size:12.5px;color:var(--accent);font-weight:500;
+  margin-bottom:28px;
 }
 .status .dot{
-  width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none;
+  width:6px;height:6px;border-radius:50%;background:var(--green);flex:none;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}
+  50%{opacity:.55;box-shadow:0 0 0 4px rgba(34,197,94,0)}
 }
 
-.btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:34px}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:32px}
 .btn{
   display:inline-block;padding:12px 22px;border-radius:9px;
-  font-size:15px;font-weight:500;text-decoration:none;
+  font-size:15px;font-weight:600;text-decoration:none;
 }
-.btn-1{background:var(--ink);color:#1A1917}
-.btn-1:hover{background:#fff}
-.btn-2{border:1px solid var(--line);color:var(--ink-2)}
-.btn-2:hover{border-color:#3D3A33;color:var(--ink)}
-.btnnote{font-size:13.5px;color:var(--ink-3)}
+.btn-1{background:var(--violet);color:#fff}
+.btn-1:hover{background:var(--violet-lift)}
+.btn-2{border:1px solid var(--line-chip);color:var(--ink-2)}
+.btn-2:hover{border-color:var(--violet-line);color:var(--ink)}
+.btnnote{font-size:13px;color:var(--ink-4)}
 
 /* ---------- generic band ---------- */
-.band{padding:84px 0;border-bottom:1px solid var(--line-soft)}
-.band-head{max-width:66ch;margin-bottom:44px}
-.band-head p{font-size:17px;color:var(--ink-2);line-height:1.6;margin-top:12px}
+.band{padding:80px 0;border-bottom:1px solid var(--line-soft)}
+.band.inset{background:var(--band)}
+.band-head{max-width:66ch;margin-bottom:40px}
+.band-head p{font-size:16.5px;color:var(--ink-2);line-height:1.65;margin-top:12px}
 
 /* ---------- grids ---------- */
-.grid{display:grid;gap:16px}
+.grid{display:grid;gap:14px}
 .g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
 
 .box{
-  border:1px solid var(--line-soft);border-radius:13px;
-  background:var(--card);padding:26px 28px;
+  border:1px solid var(--line);border-radius:12px;
+  background:var(--card);padding:24px 26px;
 }
-.box p{font-size:15.5px;line-height:1.6;color:var(--ink-2)}
+.box p{font-size:15px;line-height:1.65;color:var(--ink-2)}
 .box p + p{margin-top:11px}
+.box strong{color:var(--ink-1);font-weight:600}
 .box code{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:13.5px;color:var(--accent);
-  background:rgba(212,161,94,.09);padding:1.5px 5px;border-radius:4px;
+  font-size:13px;color:var(--accent);
+  background:var(--violet-bg);border:1px solid var(--violet-line);
+  padding:1px 6px;border-radius:5px;
 }
+
+/* Step cards — the left accent rule is .sg-live / .sg-out */
+.step{border-left:2px solid var(--violet)}
+.step .eyebrow{margin-bottom:10px;color:var(--accent)}
+
+/* ---------- demo frame ---------- */
+/* 16:9 is the frame's own aspect-ratio below, not a measurement of anything. */
+.demo-frame{
+  position:relative;aspect-ratio:16/9;width:100%;
+  background:radial-gradient(circle at 50% 30%,#12121f 0%,#0d0d14 70%);
+  border:1px dashed var(--line-chip);border-radius:12px;
+  display:grid;place-items:center;text-align:center;overflow:hidden;
+}
+/* A real <video>/<iframe> dropped in here inherits the box: no layout change. */
+.demo-frame > video,.demo-frame > iframe{
+  width:100%;height:100%;border:0;display:block;object-fit:cover;
+}
+.demo-tag{
+  position:absolute;top:12px;left:14px;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+  color:var(--accent);background:var(--violet-bg);
+  border:1px solid var(--violet-line);border-radius:5px;padding:4px 9px;
+}
+.demo-mid{padding:24px;max-width:52ch}
+.demo-play{
+  width:52px;height:52px;border-radius:50%;margin:0 auto 18px;
+  background:var(--violet-bg);border:1px solid var(--violet-line);
+  display:grid;place-items:center;font-size:15px;color:var(--accent);
+}
+.demo-mid b{display:block;font-size:16px;font-weight:600;color:var(--ink-1);margin-bottom:8px}
+.demo-mid p{font-size:14px;line-height:1.6;color:var(--ink-3)}
+.demo-note{
+  margin-top:20px;font-size:13.5px;color:var(--ink-3);line-height:1.65;
+  border-left:2px solid var(--line);padding-left:14px;max-width:74ch;
+}
+.demo-note b{color:var(--ink-2);font-weight:600}
 
 /* ---------- rails list ---------- */
-.rails{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line-soft)}
+.rails{display:flex;flex-direction:column;border-top:1px solid var(--line-soft)}
 .rail{
-  display:grid;grid-template-columns:230px 1fr;gap:30px;
-  padding:22px 4px;border-bottom:1px solid var(--line-soft);
+  display:grid;grid-template-columns:250px 1fr;gap:30px;
+  padding:20px 4px;border-bottom:1px solid var(--line-soft);
 }
-.rail dt{font-size:15.5px;color:var(--ink);font-weight:500}
-.rail dd{font-size:15.5px;color:var(--ink-2);line-height:1.6}
+.rail dt{font-size:15px;color:var(--ink-1);font-weight:600}
+.rail dd{font-size:15px;color:var(--ink-2);line-height:1.65}
 
 /* ---------- connectors ---------- */
-.conns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.conns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .conn{
-  border:1px solid var(--line-soft);border-radius:11px;background:var(--card);
-  padding:17px 19px;
+  border:1px solid var(--line);border-radius:10px;background:var(--card);
+  padding:14px 16px;
 }
-.conn b{display:block;font-size:15px;font-weight:500;margin-bottom:5px}
-.conn span{font-size:14px;color:var(--ink-3);line-height:1.5}
+.conn b{display:block;font-size:14px;font-weight:600;margin-bottom:4px;color:var(--ink-1)}
+.conn span{font-size:13px;color:var(--ink-4);line-height:1.5}
 .provenance{
-  margin-top:22px;font-size:13.5px;color:var(--ink-3);line-height:1.6;
+  margin-top:20px;font-size:13.5px;color:var(--ink-3);line-height:1.65;
   border-left:2px solid var(--line);padding-left:14px;
 }
 
+/* ---------- use-case picks ---------- */
+.pick{
+  border:1px solid var(--line);border-radius:12px;background:var(--card);
+  padding:22px 24px;display:flex;flex-direction:column;
+  text-decoration:none;transition:border-color .18s,background .18s;
+}
+.pick:hover{border-color:var(--violet-line);background:var(--card-hover)}
+.pick .dept{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+  color:var(--ink-4);margin-bottom:12px;
+}
+.pick h3{margin-bottom:10px}
+.pick p{font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.morelink{
+  display:inline-flex;align-items:center;gap:8px;margin-top:26px;
+  font-size:15px;font-weight:600;color:var(--accent);text-decoration:none;
+}
+.morelink:hover{color:var(--ink)}
+.morelink span{transition:transform .18s}
+.morelink:hover span{transform:translateX(3px)}
+
 /* ---------- "not claimed" band ---------- */
-.notclaimed{background:#1C1C1A}
-.nc-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.notclaimed{background:var(--band)}
+.nc-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
 .nc{
   display:grid;grid-template-columns:1fr 1.6fr;gap:30px;
-  padding:20px 4px;border-bottom:1px solid var(--line);
+  padding:18px 4px;border-bottom:1px solid var(--line);
 }
-.nc dt{font-size:15.5px;color:var(--ink-3);text-decoration:line-through;text-decoration-color:#4A4740}
-.nc dd{font-size:15.5px;color:var(--ink-2);line-height:1.6}
-.nc dd b{color:var(--ink);font-weight:500}
+.nc dt{font-size:15px;color:var(--ink-4);text-decoration:line-through;text-decoration-color:var(--micro)}
+.nc dd{font-size:15px;color:var(--ink-2);line-height:1.65}
+.nc dd b{color:var(--ink-1);font-weight:600}
 
-/* ---------- CTA ---------- */
-.cta{padding:92px 0;text-align:center}
-.cta h2{font-size:40px;margin-bottom:16px}
-.cta p{font-size:17px;color:var(--ink-2);max-width:54ch;margin:0 auto 32px;line-height:1.6}
+/* ---------- closing CTA ---------- */
+.cta{padding:88px 0;text-align:center}
+.cta h2{font-size:38px;margin-bottom:16px}
+.cta p{font-size:16.5px;color:var(--ink-2);max-width:56ch;margin:0 auto 14px;line-height:1.65}
 .cta .btnrow{justify-content:center}
+.cta-addr{
+  display:inline-block;margin-top:22px;font-size:14px;color:var(--ink-3);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--line-soft);padding:36px 0 48px}
-.foot{display:flex;gap:24px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--ink-3)}
+footer{border-top:1px solid var(--line-soft);background:var(--panel);padding:32px 0 44px}
+.foot{display:flex;gap:24px;align-items:center;flex-wrap:wrap;font-size:13.5px;color:var(--ink-4)}
 .foot a{text-decoration:none}
 .foot a:hover{color:var(--ink-2)}
 .foot .sp{margin-left:auto}
 
-@media(max-width:900px){
-  .conns{grid-template-columns:repeat(2,1fr)}
+@media(max-width:980px){
+  .conns,.g3{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:820px){
-  .nav{padding:16px 22px;gap:18px}
+  .nav{padding:14px 22px;gap:16px}
   .navlinks{display:none}
   .wrap{padding:0 22px}
-  h1{font-size:38px}
-  h2{font-size:29px}
-  .hero{padding:60px 0 54px}
-  .band{padding:58px 0}
-  .g2,.conns{grid-template-columns:1fr}
+  h1{font-size:36px}
+  h2{font-size:27px}
+  .hero{padding:56px 0 50px}
+  .band{padding:56px 0}
+  .g2,.g3,.conns{grid-template-columns:1fr}
   .rail,.nc{grid-template-columns:1fr;gap:7px}
-  .cta h2{font-size:31px}
+  .cta h2{font-size:29px}
+  .demo-mid b{font-size:14px}
+  .demo-mid p{font-size:12.5px}
+  .demo-play{width:40px;height:40px;margin-bottom:12px}
 }

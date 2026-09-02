@@ -13,8 +13,10 @@
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;450;500;600&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
+     Bump ?v= on every change to this file, or visitors keep the old stylesheet. -->
+<link rel="stylesheet" href="/assets/style.css?v=1">
 <style>
   /* ---------- page header ---------- */
   .uc-head{padding:56px 0 0}
@@ -55,7 +57,7 @@
     overflow:hidden;background:var(--card);
     transition:border-color .18s,background .18s;
   }
-  .card:hover{border-color:#3D3A33;background:var(--card-hover)}
+  .card:hover{border-color:var(--line-chip);background:var(--card-hover)}
 
   .thumb{
     display:grid;place-items:center;padding:26px 20px;min-height:156px;
@@ -67,14 +69,17 @@
     color:rgba(255,255,255,.55);background:rgba(0,0,0,.32);
     border-radius:4px;padding:3px 6px;font-weight:500;
   }
-  .t-rust  {background:#5C2E23}
-  .t-green {background:#1F4A38}
-  .t-indigo{background:#37356B}
-  .t-plum  {background:#4A2545}
-  .t-teal  {background:#1D4348}
-  .t-clay  {background:#5A3A22}
-  .t-slate {background:#2C3440}
-  .t-olive {background:#3D421F}
+  /* Category swatches, retuned to the cool family in design-reference/ so this page
+     and the landing page read as one product. Decorative only: the swatch carries no
+     meaning beyond telling adjacent cards apart. */
+  .t-rust  {background:#3B2247}
+  .t-green {background:#16301f}
+  .t-indigo{background:#2A2A55}
+  .t-plum  {background:#331E4A}
+  .t-teal  {background:#173A3E}
+  .t-clay  {background:#3E2A52}
+  .t-slate {background:#232338}
+  .t-olive {background:#1D3A2E}
 
   /* mini mock-up inside the thumbnail — illustrative only, no figures */
   .mini{
@@ -83,29 +88,29 @@
     padding:9px 10px;transform:rotate(-1.4deg);
     box-shadow:0 6px 18px rgba(0,0,0,.35);
   }
-  .mini h4{font-size:6.2px;font-weight:600;line-height:1.35;margin-bottom:7px;color:#E9E6DE}
-  .mini p{font-size:4.6px;line-height:1.55;color:#8E8C86}
+  .mini h4{font-size:6.2px;font-weight:600;line-height:1.35;margin-bottom:7px;color:#e2e2ee}
+  .mini p{font-size:4.6px;line-height:1.55;color:#6f6f8c}
   .row{display:flex;gap:4px;margin-bottom:4px}
   .cell{
     flex:1;border:1px solid var(--mini-line);border-radius:2px;
-    padding:2.5px 4px;font-size:4.4px;color:#9A978F;
+    padding:2.5px 4px;font-size:4.4px;color:#8a8aa8;
   }
   .pill{display:inline-block;border-radius:2px;padding:2px 5px;font-size:4.4px;font-weight:600}
-  .g{background:#1E5138;color:#7FD9AC}
-  .y{background:#5A4718;color:#E4C46A}
-  .r{background:#5A2321;color:#EC9A94}
-  .b{background:#22375C;color:#8FB8F0}
+  .g{background:#16301f;color:#4ade80}
+  .y{background:#3b2708;color:#f59e0b}
+  .r{background:#3d1a1f;color:#f87171}
+  .b{background:#1e1638;color:#a78bfa}
   .node{
     border:1px solid var(--mini-line);border-radius:2.5px;
-    padding:3px 4px;font-size:4.2px;color:#A5A29A;text-align:center;flex:1;
+    padding:3px 4px;font-size:4.2px;color:#a5a5c0;text-align:center;flex:1;
   }
-  .arrow{align-self:center;font-size:4.5px;color:#5C5A55}
+  .arrow{align-self:center;font-size:4.5px;color:#5c5c78}
 
   /* card body */
   .body{padding:26px 30px;display:flex;flex-direction:column;justify-content:center}
   .body h3{
-    font-family:'Newsreader',Georgia,serif;font-weight:400;
-    font-size:29px;letter-spacing:-.01em;margin-bottom:11px;line-height:1.2;
+    font-weight:600;
+    font-size:25px;letter-spacing:-.02em;margin-bottom:11px;line-height:1.22;
   }
   .body p{font-size:16px;line-height:1.55;color:var(--ink-2);margin-bottom:14px;max-width:800px}
   .meta{font-size:14.5px;color:var(--ink-3)}
@@ -125,12 +130,12 @@
 <nav class="nav">
   <a class="brand" href="/"><img src="/assets/icon-192.png" alt="">SIGMORA</a>
   <div class="navlinks">
+    <a href="/#demo">Demo</a>
     <a href="/#how">How it works</a>
-    <a href="/#numbers">Deterministic numbers</a>
-    <a href="/#connectors">Connectors</a>
+    <a href="/#local">Local-first</a>
     <a class="on" href="/use-cases">Use cases</a>
   </div>
-  <a class="cta-sm" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
+  <a class="cta-sm" data-cta href="/#contact">Request early access</a>
 </nav>
 
 <div class="wrap uc-head">
@@ -176,7 +181,7 @@
     <span>SIGMORA Agentic OS</span>
     <span>Local-first · Auditable · Privacy by design</span>
     <span class="sp"><a href="/">Home</a></span>
-    <span><a href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20hello">Contact</a></span>
+    <span><a data-cta data-cta-subject="hello" href="/#contact">Contact</a></span>
   </div>
 </footer>
 
@@ -375,5 +380,10 @@ dept.addEventListener('change',render);
 tool.addEventListener('change',render);
 render();
 </script>
+<!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year,
+     and this file holds the contact address. Bump ?v= when CONTACT changes, or the
+     old address survives in visitors' caches long after the edit. -->
+<script src="/assets/cta.js?v=1"></script>
+
 </body>
 </html>
