@@ -127,10 +127,22 @@ if (cards === null) {
   if (emptyCopy.length) fail(`${emptyCopy.length} card(s) parsed with empty title/description`);
   else pass('every card carries title and description text');
 
-  // The page is the site's only source of use cases; a silent truncation to one
-  // or two cards would still satisfy everything above.
-  if (cards.length < 12) fail(`only ${cards.length} cards extracted; the page is meant to carry the full set`);
-  else pass('card count is in the expected range');
+  // The landing page prints this count in prose. Generate the comparison from the DATA
+  // array rather than trusting the comment beside it that says "re-count and edit here" —
+  // the same move the connector provenance block already makes. A figure a human is asked
+  // to maintain drifts silently; one checked against its own source cannot.
+  //
+  // The no-match branch FAILS rather than skipping: if the prose line is reworded, a
+  // check that quietly found nothing would report a clean page forever.
+  const idxForCount = read('index.html');
+  const countMatch = idxForCount.match(/See all +([0-9]+) +use cases/i);
+  if (!countMatch) {
+    fail('could not find the "See all N use cases" line in index.html — the count check would pass vacuously');
+  } else if (Number(countMatch[1]) !== cards.length) {
+    fail(`index.html says "See all ${countMatch[1]} use cases" but use-cases.html carries ${cards.length}`);
+  } else {
+    pass(`the landing page count matches the catalogue exactly (${cards.length})`);
+  }
 }
 
 // =========================================================================
