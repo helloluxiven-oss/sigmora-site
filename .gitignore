@@ -5,3 +5,13 @@ Thumbs.db
 *.log
 .next/
 out/
+
+# Screen-recording sources and intermediates. The finished, swept demo ships as
+# assets/demo.mp4; raw captures never get committed — they carry whatever was on
+# screen, and no guard in this repo can see inside a video file.
+*.mp4
+*.mov
+*.mkv
+*.webm
+!assets/demo.mp4
+!assets/demo.webm

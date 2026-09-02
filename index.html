@@ -93,6 +93,14 @@
       </div>
     </div>
 
+    <!-- Same discipline as the use-cases panels, which carry an "Illustrative" badge and
+         the illus-note above the grid. The recording ends by opening a generated
+         deliverable, and a figure on screen reads as a measured one unless the page says
+         otherwise — so it says otherwise here rather than going quiet in the one place
+         the claim guard cannot look. Pixels are not text; check-claims cannot read a
+         video, so this caption is the only thing standing where the guard would be. -->
+    <p class="demo-cap">Recorded on a demo org with synthetic data. Any figures on screen are illustrative.</p>
+
     <!-- The run described below is launch-brief §7, "What it can do right now", quoted
          as the verified end-to-end run it records there. The brief's per-department
          detail (contract values, month-one targets) is deliberately not repeated:
@@ -167,6 +175,80 @@
         </p>
       </div>
     </div>
+
+    <!-- ---- the org, drawn ------------------------------------------------
+         Makes steps two and three concrete: the same delegation the brief
+         describes in §2, as a shape rather than a paragraph.
+
+         Numbers: there are none. Every label is qualitative on purpose — the
+         coordinates in the viewBox and the transforms are this drawing's own
+         geometry, the same category as the demo frame's 16:9, not measurements
+         of anything the product did.
+
+         Renders finished with scripting off: the tree below is static markup in
+         its resting state, and the button is `hidden` in source and revealed by
+         JS, so nothing broken is ever shown. -->
+    <figure class="orgviz">
+      <svg viewBox="0 0 800 430" role="img" aria-labelledby="ovt ovd" class="orgviz-svg">
+        <title id="ovt">A SIGMORA agent org</title>
+        <desc id="ovd">
+          A chief executive agent leading three department heads — Marketing, Sales and Finance.
+          Sales leads one worker, a pipeline analyst. Work is delegated down the tree and the
+          results are synthesised back into a single deliverable at the bottom.
+        </desc>
+
+        <g class="ov-edges" fill="none">
+          <path id="e-mkt" d="M400,74 C400,120 130,112 130,158" />
+          <path id="e-sal" d="M400,74 C400,110 400,120 400,158" />
+          <path id="e-fin" d="M400,74 C400,120 670,112 670,158" />
+          <path id="e-wrk" d="M400,204 C400,240 400,248 400,286" />
+        </g>
+
+        <g class="ov-node" data-node="ceo" transform="translate(325,28)">
+          <rect width="150" height="46" rx="9" />
+          <text class="ov-role" x="12" y="20">CEO</text>
+          <text class="ov-meta" x="12" y="35" data-label="ceo">lead &middot; orchestrator</text>
+        </g>
+
+        <g class="ov-node" data-node="mkt" transform="translate(55,158)">
+          <rect width="150" height="46" rx="9" />
+          <text class="ov-role" x="12" y="20">Marketing</text>
+          <text class="ov-meta" x="12" y="35" data-label="mkt">department head</text>
+        </g>
+
+        <g class="ov-node" data-node="sal" transform="translate(325,158)">
+          <rect width="150" height="46" rx="9" />
+          <text class="ov-role" x="12" y="20">Sales</text>
+          <text class="ov-meta" x="12" y="35" data-label="sal">department head</text>
+        </g>
+
+        <g class="ov-node" data-node="fin" transform="translate(595,158)">
+          <rect width="150" height="46" rx="9" />
+          <text class="ov-role" x="12" y="20">Finance</text>
+          <text class="ov-meta" x="12" y="35" data-label="fin">department head</text>
+        </g>
+
+        <g class="ov-node ov-worker" data-node="wrk" transform="translate(325,286)">
+          <rect width="150" height="46" rx="9" />
+          <text class="ov-role" x="12" y="20">Pipeline Analyst</text>
+          <text class="ov-meta" x="12" y="35" data-label="wrk">worker &middot; under Sales</text>
+        </g>
+
+        <g class="ov-node ov-deliverable" data-node="out" transform="translate(250,366)">
+          <rect width="300" height="44" rx="9" />
+          <text class="ov-role" x="16" y="19">Go-to-market plan</text>
+          <text class="ov-meta" x="16" y="34" data-label="out">one document, a section per department</text>
+        </g>
+      </svg>
+
+      <figcaption class="orgviz-foot">
+        <button type="button" class="orgviz-btn" id="ov-run" hidden>Run it</button>
+        <p class="orgviz-status" id="ov-status" role="status" aria-live="polite">
+          One instruction, delegated to three departments and a worker, synthesised back into a
+          single deliverable.
+        </p>
+      </figcaption>
+    </figure>
 
     <!-- launch-brief §2, "Safety rails built into the engine". -->
     <dl class="rails" style="margin-top:34px">
@@ -402,6 +484,118 @@
      and this file holds the contact address. Bump ?v= when CONTACT changes, or the
      old address survives in visitors' caches long after the edit. -->
 <script src="/assets/cta.js?v=1"></script>
+
+<script>
+/* The org visualisation. Vanilla, no library, no network.
+
+   Three rules it keeps:
+   - The markup is already the finished tree. This only ever ADDS the run; if it
+     never executes, the section still reads correctly.
+   - prefers-reduced-motion jumps straight to the end state. No timers start.
+   - The button is revealed here, never in markup, so scripting-off never shows a
+     control that does nothing. */
+(function () {
+  var fig = document.querySelector('.orgviz');
+  var btn = document.getElementById('ov-run');
+  var status = document.getElementById('ov-status');
+  if (!fig || !btn || !status) return;
+
+  var node = function (n) { return fig.querySelector('[data-node="' + n + '"]'); };
+  var edge = function (e) { return fig.querySelector('#e-' + e); };
+  var label = function (n, t) { var el = fig.querySelector('[data-label="' + n + '"]'); if (el) el.textContent = t; };
+
+  var REST = { ceo: 'lead · orchestrator', mkt: 'department head', sal: 'department head',
+               fin: 'department head', wrk: 'worker · under Sales',
+               out: 'one document, a section per department' };
+  var RESTING = status.textContent;
+
+  // The finished state, as data. Used by the reduced-motion path and the last step
+  // alike, so the two can never drift apart.
+  var DONE = { ceo: 'synthesised the final answer', mkt: 'positioning drafted',
+               sal: 'forecast and targets', fin: 'cost model', wrk: 'pipeline forecast',
+               out: 'assembled from every department' };
+
+  var timers = [];
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setState(n, s) {
+    var g = node(n);
+    if (!g) return;
+    if (s) g.setAttribute('data-state', s); else g.removeAttribute('data-state');
+  }
+  function show(n) { var g = node(n); if (g) g.setAttribute('data-shown', '1'); }
+  function edgeClass(e, c) {
+    var p = edge(e);
+    if (!p) return;
+    p.setAttribute('class', c || '');
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout); timers = [];
+    ['ceo', 'mkt', 'sal', 'fin', 'wrk', 'out'].forEach(function (n) { setState(n, null); label(n, REST[n]); });
+    ['mkt', 'sal', 'fin', 'wrk'].forEach(function (e) { edgeClass(e, ''); });
+    fig.querySelectorAll('[data-shown]').forEach(function (g) { g.removeAttribute('data-shown'); });
+    status.textContent = RESTING;
+    btn.textContent = 'Run it';
+    btn.disabled = false;
+  }
+
+  function finish() {
+    ['ceo', 'mkt', 'sal', 'fin', 'wrk', 'out'].forEach(function (n) { setState(n, 'done'); label(n, DONE[n]); });
+    ['mkt', 'sal', 'fin', 'wrk'].forEach(function (e) { edgeClass(e, 'settled'); });
+    show('wrk'); show('out');
+    status.textContent = 'Done. Every department reported back, and the lead synthesised one deliverable.';
+    btn.textContent = 'Reset';
+    btn.disabled = false;
+  }
+
+  // [delay, work] — one list so the sequence reads in order.
+  var SCRIPT = [
+    [0, function () {
+      status.textContent = 'The CEO agent delegates to its direct reports.';
+      setState('ceo', 'active'); label('ceo', 'delegating to direct reports');
+      ['mkt', 'sal', 'fin'].forEach(function (e) { edgeClass(e, 'flow'); });
+    }],
+    [1100, function () {
+      ['mkt', 'sal', 'fin'].forEach(function (n) { setState(n, 'active'); label(n, 'working'); });
+      status.textContent = 'Marketing, Sales and Finance each run with their own instructions, model and tools.';
+    }],
+    [2100, function () {
+      show('wrk'); setState('wrk', 'active'); edgeClass('wrk', 'flow');
+      label('wrk', 'spawned by Sales');
+      status.textContent = 'Sales delegates further — a fresh, isolated run for its own worker.';
+    }],
+    [3300, function () { setState('mkt', 'done'); label('mkt', DONE.mkt); edgeClass('mkt', 'settled'); }],
+    [3900, function () {
+      setState('wrk', 'done'); label('wrk', DONE.wrk); edgeClass('wrk', 'settled');
+      status.textContent = 'Results bubble back up the tree as each agent finishes.';
+    }],
+    [4500, function () { setState('sal', 'done'); label('sal', DONE.sal); edgeClass('sal', 'settled'); }],
+    [5100, function () { setState('fin', 'done'); label('fin', DONE.fin); edgeClass('fin', 'settled'); }],
+    [6000, function () {
+      setState('ceo', 'done'); label('ceo', DONE.ceo);
+      show('out'); setState('out', 'done'); label('out', DONE.out);
+    }],
+    [6600, finish],
+  ];
+
+  function run() {
+    reset();
+    fig.setAttribute('data-armed', '1');
+    if (reduce) { finish(); return; }   // end state, no timers
+    btn.disabled = true;
+    btn.textContent = 'Running…';
+    SCRIPT.forEach(function (step) { timers.push(setTimeout(step[1], step[0])); });
+  }
+
+  btn.addEventListener('click', function () {
+    if (btn.textContent === 'Reset') { fig.removeAttribute('data-armed'); reset(); return; }
+    run();
+  });
+
+  btn.hidden = false;   // only now is there something for it to do
+})();
+</script>
 
 <script>
 (function () {
