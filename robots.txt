@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# No Sitemap line until a real domain is assigned — a sitemap URL pointing at a
+# placeholder host is a 404 that search engines retry for weeks.

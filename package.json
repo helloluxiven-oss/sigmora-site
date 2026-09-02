@@ -1,0 +1,12 @@
+{
+  "name": "sigmora-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static marketing site for SIGMORA Agentic OS. No build step; Vercel serves this directory.",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check-claims.mjs",
+    "dev": "node --run serve",
+    "serve": "node -e \"const h=require('node:http'),f=require('node:fs'),p=require('node:path');h.createServer((q,s)=>{let u=decodeURIComponent(q.url.split('?')[0]);let c=['.'+u,'.'+u+'.html','.'+u+'/index.html'].find(x=>{try{return f.statSync(x).isFile()}catch{return false}});if(!c){s.writeHead(404);return s.end('404')}const t={'.html':'text/html','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.json':'application/json'}[p.extname(c)]||'application/octet-stream';s.writeHead(200,{'content-type':t});f.createReadStream(c).pipe(s)}).listen(4321,()=>console.log('http://localhost:4321'))\""
+  }
+}

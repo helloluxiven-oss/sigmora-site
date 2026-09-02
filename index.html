@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIGMORA Agentic OS — a local-first AI company for your business</title>
+<meta name="description" content="A local-first desktop app that turns a plain-English description of your business into a working team of AI agents — a CEO that delegates to department heads and workers, running on your own machine.">
+<link rel="icon" href="/assets/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/icon-256.png">
+<meta property="og:title" content="SIGMORA Agentic OS">
+<meta property="og:description" content="Describe your business in plain English. Get a working team of AI agents that runs it — on your own machine.">
+<meta property="og:image" content="/assets/icon-512.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;450;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="/"><img src="/assets/icon-192.png" alt="">SIGMORA</a>
+  <div class="navlinks">
+    <a href="/#how">How it works</a>
+    <a href="/#numbers">Deterministic numbers</a>
+    <a href="/#connectors">Connectors</a>
+    <a href="/use-cases">Use cases</a>
+  </div>
+  <a class="cta-sm" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="status"><span class="dot"></span>In active development — this is an early look</div>
+    <h1>An AI company that runs your business.</h1>
+    <p class="lede">
+      SIGMORA Agentic OS is a <strong>local-first desktop app</strong> that turns a plain-English
+      description of your business into a working team of AI agents — a CEO agent that delegates to
+      department heads and workers — which actually run your workflows and produce real deliverables:
+      reports, plans, spreadsheets. On your own machine.
+    </p>
+    <div class="btnrow">
+      <a class="btn btn-1" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
+      <a class="btn btn-2" href="/use-cases">See what it runs</a>
+      <span class="btnnote">No public download yet — nothing ships until it's ready.</span>
+    </div>
+  </div>
+</header>
+
+<section class="band" id="how">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="eyebrow">How it works</div>
+      <h2>A real org, not one long chat.</h2>
+      <p>
+        A loop around a single model is one improviser doing everything in prose. SIGMORA runs a
+        bounded tree of specialised agents, each with its own instructions, its own model, and only
+        the tools it was granted.
+      </p>
+    </div>
+
+    <div class="grid g2">
+      <div class="box">
+        <h3>The org tree</h3>
+        <p>
+          An org is a <strong>tree of agent nodes</strong>: a lead orchestrator — the CEO — leading
+          department heads (Marketing, Sales, Finance…), which lead workers.
+        </p>
+        <p>
+          Each node is a role, its own system instructions, a model, a tool allowlist, and its direct
+          reports. Nothing is shared implicitly.
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>Delegation that bubbles up</h3>
+        <p>
+          Every manager node is given a <code>delegate</code> tool scoped to its
+          <strong>direct reports only</strong>.
+        </p>
+        <p>
+          Calling it spawns a fresh, isolated agent run for that child — with the child's own role,
+          instructions, model and tools — runs it to completion, and returns the result to the parent.
+          Results bubble up the tree, and the lead synthesises the final answer.
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>How agents get tools and models</h3>
+        <p>
+          When a node runs it resolves its model — a per-tier default for lead, sub-agent or worker,
+          or a per-node override — and is handed only the tools on its allowlist: file I/O,
+          knowledge-vault search, deterministic compute, document and spreadsheet generation, plus
+          extensible MCP servers and custom HTTP tools.
+        </p>
+        <p>Any risky or irreversible tool is wrapped in a <strong>human approval gate</strong>.</p>
+      </div>
+
+      <div class="box">
+        <h3>Rails, audit trail, kill-switch</h3>
+        <p>
+          Hard caps on delegation depth, number of agent runs, total iterations, per-tool call budgets
+          and wall-clock time — the clock is shared across the whole run, so one limit winds the
+          entire tree down rather than leaving branches spinning.
+        </p>
+        <p>
+          A full audit trail of every start, delegation, tool call and result. And a privacy
+          <strong>kill-switch</strong> — Internal mode — that forces every agent, lead and workers
+          alike, onto a local model and blocks all cloud traffic.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="numbers">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="eyebrow">The architectural bet</div>
+      <h2>The model is a router. It never authors data.</h2>
+      <p>
+        LLMs hallucinate figures, which is a non-starter for anything touching finance or reporting.
+        The fix here is architectural, not a bigger model.
+      </p>
+    </div>
+
+    <dl class="rails">
+      <div class="rail">
+        <dt>Tools return structured objects</dt>
+        <dd>Not prose the next step has to re-read and re-interpret.</dd>
+      </div>
+      <div class="rail">
+        <dt>Code assembles anything with a number</dt>
+        <dd>
+          Totals, metrics and tables are computed deterministically, so the figures in a report are
+          exact and are never invented by the model.
+        </dd>
+      </div>
+      <div class="rail">
+        <dt>The model writes the prose around them</dt>
+        <dd>
+          It decides what to do and who to delegate to. It does not type the numbers you report on.
+        </dd>
+      </div>
+      <div class="rail">
+        <dt>Which is why a small local model is still safe here</dt>
+        <dd>
+          Trustworthiness for money and reporting comes from where the figures are computed, not from
+          the size of the model doing the routing.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section class="band" id="connectors">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="eyebrow">Connectors</div>
+      <h2>Wired to the tools you already run.</h2>
+      <p>
+        Every connector is MCP-backed: you register the server, choose which of its tools it grants,
+        and attach it to the agents that should hold it. Nothing is connected by default, and an agent
+        only ever sees what you gave it.
+      </p>
+    </div>
+
+    <div class="conns" id="conns"></div>
+
+    <p class="provenance">
+      This list is generated from the product's own connector catalogue rather than written by hand,
+      so the site can't quietly claim an integration the app doesn't offer.
+    </p>
+  </div>
+</section>
+
+<section class="band notclaimed">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="eyebrow">What we're not claiming</div>
+      <h2>The limits, stated up front.</h2>
+      <p>
+        Marketing pages tend to go quiet exactly where a product is weakest. Here is where this one
+        is today.
+      </p>
+    </div>
+
+    <dl class="nc-list">
+      <div class="nc">
+        <dt>Semantic search</dt>
+        <dd>
+          Knowledge-vault retrieval is <b>keyword and frontmatter based</b>. It is not
+          embeddings-based semantic search yet.
+        </dd>
+      </div>
+      <div class="nc">
+        <dt>Headless background service</dt>
+        <dd>
+          Scheduled workflows fire <b>while the app is resident in your system tray</b>. It is not a
+          fully headless service that runs without it.
+        </dd>
+      </div>
+      <div class="nc">
+        <dt>Multi-tenant enterprise layer</dt>
+        <dd>It is <b>single-user and local</b> today. There is no shared or multi-tenant deployment.</dd>
+      </div>
+      <div class="nc">
+        <dt>Native first-party integrations</dt>
+        <dd>
+          Connectors are <b>MCP servers you register yourself</b>. SIGMORA does not ship its own
+          OAuth clients for Gmail, Slack or Sheets.
+        </dd>
+      </div>
+      <div class="nc">
+        <dt>Available now</dt>
+        <dd>
+          <b>In active development</b>, built against real day-to-day work rather than a demo dataset.
+          There is no public download yet.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>Want an early look?</h2>
+    <p>
+      Built solo, against real work rather than a demo dataset. If it looks like it would fit what you
+      do, say hello — I'll get in touch when there's something to install.
+    </p>
+    <div class="btnrow">
+      <a class="btn btn-1" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
+      <a class="btn btn-2" href="/use-cases">Browse the use cases</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>SIGMORA Agentic OS</span>
+    <span>Local-first · Auditable · Privacy by design</span>
+    <span class="sp"><a href="/use-cases">Use cases</a></span>
+    <span><a href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20hello">Contact</a></span>
+  </div>
+</footer>
+
+<!-- Connector catalogue. Synced from the product source; see scripts/sync-connectors.mjs
+     and the _source block for provenance. Do not hand-edit. -->
+<script type="application/json" id="connector-data">
+{
+  "_source": {
+    "repo": "sigmora",
+    "file": "apps/web/app/lib/connectorCatalog.ts",
+    "commit": "e9d90df2687721b5f35b746ad1fee4317b5b40d8",
+    "synced": "2026-09-02",
+    "note": "A connector is ALWAYS MCP-backed — this is metadata only, no first-party auth clients."
+  },
+  "connectors": [
+    { "id": "gmail",           "label": "Gmail",            "blurb": "Read, search, and send mail from a connected Gmail account." },
+    { "id": "outlook",         "label": "Outlook / M365",   "blurb": "Mail and calendar via Microsoft 365 (Outlook)." },
+    { "id": "gsheets",         "label": "Google Sheets",    "blurb": "Read and write rows in connected spreadsheets." },
+    { "id": "google_calendar", "label": "Google Calendar",  "blurb": "Read and create calendar events across your Google accounts." },
+    { "id": "n8n",             "label": "n8n",              "blurb": "Reach the workflows you chose to expose from your own n8n instance." },
+    { "id": "notion",          "label": "Notion",           "blurb": "Read and write pages and databases in a Notion workspace." },
+    { "id": "slack",           "label": "Slack",            "blurb": "Post and read messages in connected Slack channels." },
+    { "id": "telegram",        "label": "Telegram",         "blurb": "Send and receive messages via a Telegram bot." },
+    { "id": "webhook",         "label": "HTTP / Webhook",   "blurb": "Call an HTTP endpoint or fetch pages from the web." }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var el = document.getElementById('connector-data');
+  var host = document.getElementById('conns');
+  if (!el || !host) return;
+  var data = JSON.parse(el.textContent);
+  host.innerHTML = data.connectors.map(function (c) {
+    return '<div class="conn"><b></b><span></span></div>';
+  }).join('');
+  // Set text via textContent so a blurb can never inject markup.
+  Array.prototype.forEach.call(host.children, function (node, i) {
+    node.querySelector('b').textContent = data.connectors[i].label;
+    node.querySelector('span').textContent = data.connectors[i].blurb;
+  });
+})();
+</script>
+
+</body>
+</html>

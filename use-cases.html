@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Use cases — SIGMORA Agentic OS</title>
+<meta name="description" content="Departments, workflows and automations a SIGMORA agent org can run — filterable by department and by the tools it needs.">
+<link rel="icon" href="/assets/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/icon-256.png">
+<meta property="og:title" content="SIGMORA — use cases">
+<meta property="og:description" content="Departments, workflows and automations a SIGMORA agent org can run.">
+<meta property="og:image" content="/assets/icon-512.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;450;500;600&display=swap">
+<link rel="stylesheet" href="/assets/style.css">
+<style>
+  /* ---------- page header ---------- */
+  .uc-head{padding:56px 0 0}
+  .uc-head h1{margin-bottom:18px}
+  .uc-head .sub{margin-bottom:14px;max-width:60ch}
+  .illus-note{
+    font-size:14.5px;color:var(--ink-3);line-height:1.6;max-width:64ch;
+    border-left:2px solid var(--line);padding-left:14px;margin-bottom:40px;
+  }
+
+  /* ---------- controls ---------- */
+  .controls{display:flex;align-items:center;gap:12px;margin-bottom:40px;flex-wrap:wrap}
+  .search{
+    display:flex;align-items:center;gap:10px;
+    border:1px solid var(--line);border-radius:10px;
+    padding:10px 16px;width:210px;
+  }
+  .search svg{flex:none;opacity:.5}
+  .search input{
+    background:none;border:none;outline:none;color:var(--ink);
+    font-family:inherit;font-size:15px;width:100%;
+  }
+  .search input::placeholder{color:var(--ink-3)}
+  .sel{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--line);border-radius:10px;
+    padding:10px 15px;font-size:15px;color:var(--ink-2);cursor:pointer;position:relative;
+  }
+  .sel b{color:var(--ink);font-weight:450}
+  .sel select{position:absolute;inset:0;opacity:0;cursor:pointer;font-family:inherit}
+  .count{margin-left:auto;font-size:15px;color:var(--ink-3)}
+
+  /* ---------- cards ---------- */
+  .list{display:flex;flex-direction:column;gap:16px;padding-bottom:88px}
+  .card{
+    display:grid;grid-template-columns:222px 1fr;
+    border:1px solid var(--line-soft);border-radius:13px;
+    overflow:hidden;background:var(--card);
+    transition:border-color .18s,background .18s;
+  }
+  .card:hover{border-color:#3D3A33;background:var(--card-hover)}
+
+  .thumb{
+    display:grid;place-items:center;padding:26px 20px;min-height:156px;
+    position:relative;
+  }
+  .thumb .illus{
+    position:absolute;top:9px;left:10px;
+    font-size:9px;letter-spacing:.09em;text-transform:uppercase;
+    color:rgba(255,255,255,.55);background:rgba(0,0,0,.32);
+    border-radius:4px;padding:3px 6px;font-weight:500;
+  }
+  .t-rust  {background:#5C2E23}
+  .t-green {background:#1F4A38}
+  .t-indigo{background:#37356B}
+  .t-plum  {background:#4A2545}
+  .t-teal  {background:#1D4348}
+  .t-clay  {background:#5A3A22}
+  .t-slate {background:#2C3440}
+  .t-olive {background:#3D421F}
+
+  /* mini mock-up inside the thumbnail — illustrative only, no figures */
+  .mini{
+    width:132px;border-radius:5px;background:var(--mini);
+    border:1px solid var(--mini-line);
+    padding:9px 10px;transform:rotate(-1.4deg);
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  .mini h4{font-size:6.2px;font-weight:600;line-height:1.35;margin-bottom:7px;color:#E9E6DE}
+  .mini p{font-size:4.6px;line-height:1.55;color:#8E8C86}
+  .row{display:flex;gap:4px;margin-bottom:4px}
+  .cell{
+    flex:1;border:1px solid var(--mini-line);border-radius:2px;
+    padding:2.5px 4px;font-size:4.4px;color:#9A978F;
+  }
+  .pill{display:inline-block;border-radius:2px;padding:2px 5px;font-size:4.4px;font-weight:600}
+  .g{background:#1E5138;color:#7FD9AC}
+  .y{background:#5A4718;color:#E4C46A}
+  .r{background:#5A2321;color:#EC9A94}
+  .b{background:#22375C;color:#8FB8F0}
+  .node{
+    border:1px solid var(--mini-line);border-radius:2.5px;
+    padding:3px 4px;font-size:4.2px;color:#A5A29A;text-align:center;flex:1;
+  }
+  .arrow{align-self:center;font-size:4.5px;color:#5C5A55}
+
+  /* card body */
+  .body{padding:26px 30px;display:flex;flex-direction:column;justify-content:center}
+  .body h3{
+    font-family:'Newsreader',Georgia,serif;font-weight:400;
+    font-size:29px;letter-spacing:-.01em;margin-bottom:11px;line-height:1.2;
+  }
+  .body p{font-size:16px;line-height:1.55;color:var(--ink-2);margin-bottom:14px;max-width:800px}
+  .meta{font-size:14.5px;color:var(--ink-3)}
+  .meta .dot{margin:0 8px;opacity:.6}
+
+  .empty{padding:60px 4px;color:var(--ink-3);font-size:16px}
+
+  @media(max-width:820px){
+    .card{grid-template-columns:1fr}
+    .count{margin-left:0;width:100%}
+    .uc-head{padding:34px 0 0}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="/"><img src="/assets/icon-192.png" alt="">SIGMORA</a>
+  <div class="navlinks">
+    <a href="/#how">How it works</a>
+    <a href="/#numbers">Deterministic numbers</a>
+    <a href="/#connectors">Connectors</a>
+    <a class="on" href="/use-cases">Use cases</a>
+  </div>
+  <a class="cta-sm" href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20early%20access">Request early access</a>
+</nav>
+
+<div class="wrap uc-head">
+  <h1>Use cases</h1>
+  <p class="sub">The kind of work an agent org can be built to run — filter by department, or by what it needs to reach.</p>
+  <p class="illus-note">
+    The panels below are <strong>illustrative mock-ups</strong> — not screenshots, and not results
+    from real runs. They show the shape of what an agent produces, not a measured outcome. Every
+    connector shown is MCP-backed and off until you connect it.
+  </p>
+
+  <div class="controls">
+    <label class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input id="q" placeholder="Search" aria-label="Search use cases">
+    </label>
+
+    <div class="sel">Department <b id="lblDept">All</b> ▾
+      <select id="dept" aria-label="Filter by department">
+        <option>All</option><option>Sales</option><option>Marketing</option>
+        <option>Operations</option><option>Finance</option><option>Support</option>
+        <option>Research</option><option>People</option><option>Executive</option>
+      </select>
+    </div>
+
+    <div class="sel">Needs <b id="lblTool">All</b> ▾
+      <select id="tool" aria-label="Filter by tool">
+        <option>All</option><option>n8n</option><option>Knowledge Vault</option>
+        <option>Google Sheets</option><option>Slack</option><option>MCP</option>
+      </select>
+    </div>
+
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="list" id="list"></div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span>SIGMORA Agentic OS</span>
+    <span>Local-first · Auditable · Privacy by design</span>
+    <span class="sp"><a href="/">Home</a></span>
+    <span><a href="mailto:helloluxiven@gmail.com?subject=SIGMORA%20%E2%80%94%20hello">Contact</a></span>
+  </div>
+</footer>
+
+<script>
+/* Use-case catalogue.
+   HOUSE RULE FOR THIS FILE: no digits anywhere in a card's `mini` mock-up, and no
+   duration, rate, percentage or throughput anywhere in `t` or `d`. These panels are
+   illustrative; a number on one reads as a measured result and none of them is sourced.
+   `npm run check` enforces the digit half mechanically — see scripts/check-claims.mjs. */
+const DATA = [
+  {
+    t:"Account research before every call",
+    d:"The Research Agent reads your vault, the account's recent mail and the notes in Sheets, then returns a one-page brief on what changed and where you fit.",
+    dept:"Sales", tool:["Knowledge Vault","Google Sheets"], color:"t-rust",
+    mini:`<h4>Account brief — sample</h4>
+          <div class="row"><div class="cell">Last touch</div><div class="cell">from mail</div></div>
+          <div class="row"><div class="cell">Open items</div><div class="cell">from Sheets</div></div>
+          <p>What they do, what changed, and where we fit.</p>`
+  },
+  {
+    t:"Run a workflow over a list and log every outcome",
+    d:"Hand the agent a list. It triggers the n8n workflow you chose to expose, parses each result, and writes the outcome back to the sheet — with the write behind an approval gate.",
+    dept:"Sales", tool:["n8n","Google Sheets"], color:"t-clay",
+    mini:`<div class="row"><div class="node">Load sheet</div><div class="arrow">→</div><div class="node">Run</div></div>
+          <div class="row"><div class="node">Parse</div><div class="arrow">→</div><div class="node">Update</div></div>
+          <div class="row"><div class="cell">Completed</div><div class="cell"><span class="pill g">logged</span></div></div>
+          <div class="row"><div class="cell">Needs review</div><div class="cell"><span class="pill y">flagged</span></div></div>`
+  },
+  {
+    t:"Account health in green, yellow, red",
+    d:"Pull usage, tickets and renewal dates from the tools you already run, and get every account graded with the next moves on each.",
+    dept:"Sales", tool:["MCP","Google Sheets"], color:"t-green",
+    mini:`<div class="row"><div class="cell">Northwind</div><div class="cell"><span class="pill g">Green</span></div></div>
+          <div class="row"><div class="cell">Contoso</div><div class="cell"><span class="pill y">Yellow</span></div></div>
+          <div class="row"><div class="cell">Fabrikam</div><div class="cell"><span class="pill r">Red</span></div></div>
+          <div class="row"><div class="cell">Adventure</div><div class="cell"><span class="pill g">Green</span></div></div>`
+  },
+  {
+    t:"Turn one piece of content into a set of posts",
+    d:"The Marketing Agent takes a single blog post or transcript and adapts it for LinkedIn, X, email and your newsletter — same voice, right length for each.",
+    dept:"Marketing", tool:["Knowledge Vault"], color:"t-indigo",
+    mini:`<h4>Nurture set — draft</h4>
+          <div class="row"><div class="cell">LinkedIn</div><div class="cell">Ready</div></div>
+          <div class="row"><div class="cell">X thread</div><div class="cell">Ready</div></div>
+          <div class="row"><div class="cell">Email</div><div class="cell">Draft</div></div>
+          <p>One source, several formats, one voice throughout.</p>`
+  },
+  {
+    t:"Launch a campaign from a plain-English brief",
+    d:"Describe the campaign the way you'd say it out loud. Builder Mode lays out the department, the agents, the tools each one holds, and the approval points.",
+    dept:"Marketing", tool:["n8n"], color:"t-plum",
+    mini:`<h4>Builder — campaign</h4>
+          <div class="row"><div class="node">Brief</div><div class="arrow">→</div><div class="node">Plan</div></div>
+          <div class="row"><div class="node">Assets</div><div class="arrow">→</div><div class="node">Send</div></div>
+          <p>Approval required before anything leaves the building.</p>`
+  },
+  {
+    t:"Answer support questions from your own documents",
+    d:"Point the Support Agent at the Knowledge Vault. Every answer names the file it came from — and says plainly when the answer isn't in your data.",
+    dept:"Support", tool:["Knowledge Vault"], color:"t-teal",
+    mini:`<h4>Answered from</h4>
+          <div class="row"><div class="cell">refund-policy.pdf</div></div>
+          <div class="row"><div class="cell">sla-tiers.docx</div></div>
+          <div class="row"><div class="cell"><span class="pill b">sources cited</span></div></div>
+          <p>Not in your data? It says so instead of guessing.</p>`
+  },
+  {
+    t:"Triage the queue and draft the replies",
+    d:"Sort overnight tickets by urgency, group the duplicates, and leave a drafted reply on each one. Nothing sends until you press the button.",
+    dept:"Support", tool:["MCP","Slack"], color:"t-slate",
+    mini:`<div class="row"><div class="cell">Urgent</div><div class="cell"><span class="pill r">flagged</span></div></div>
+          <div class="row"><div class="cell">Normal</div><div class="cell"><span class="pill y">queued</span></div></div>
+          <div class="row"><div class="cell">Duplicate</div><div class="cell"><span class="pill b">grouped</span></div></div>
+          <p>Every reply drafted. Nothing sends without your approval.</p>`
+  },
+  {
+    t:"Reconcile supplier invoices against the ledger",
+    d:"The Finance Agent matches invoices to what was actually delivered, flags the gaps, and shows its working — every figure traced to a source row.",
+    dept:"Finance", tool:["Google Sheets","Knowledge Vault"], color:"t-olive",
+    mini:`<h4>Reconciliation</h4>
+          <div class="row"><div class="cell">Matched</div><div class="cell"><span class="pill g">ok</span></div></div>
+          <div class="row"><div class="cell">Variance</div><div class="cell"><span class="pill y">review</span></div></div>
+          <div class="row"><div class="cell">Missing</div><div class="cell"><span class="pill r">chase</span></div></div>
+          <p>Code owns every number. Nothing is typed by the model.</p>`
+  },
+  {
+    t:"Numbers assembled, not estimated",
+    d:"A standing report that pulls the real figures, states what it could not compute, and names the models and sources behind each block.",
+    dept:"Executive", tool:["Google Sheets","MCP"], color:"t-rust",
+    mini:`<h4>Standing summary</h4>
+          <div class="row"><div class="cell">Figures</div><div class="cell">computed</div></div>
+          <div class="row"><div class="cell">Sources</div><div class="cell">named</div></div>
+          <div class="row"><div class="cell">Gaps</div><div class="cell"><span class="pill y">stated</span></div></div>
+          <p>Anything it could not compute is named, not quietly dropped.</p>`
+  },
+  {
+    t:"Attach any n8n workflow to any agent",
+    d:"You already built the automations. Point the agent at the ones it should hold — the Marketing Agent gets the campaign flows, Ops gets the dispatch flows.",
+    dept:"Operations", tool:["n8n"], color:"t-indigo",
+    mini:`<h4>Tools — Marketing Agent</h4>
+          <div class="row"><div class="cell">Lead generation</div><div class="cell"><span class="pill g">on</span></div></div>
+          <div class="row"><div class="cell">Nurture sequence</div><div class="cell"><span class="pill g">on</span></div></div>
+          <div class="row"><div class="cell">Dispatch route</div><div class="cell"><span class="pill r">off</span></div></div>`
+  },
+  {
+    t:"Route the day's jobs and chase the exceptions",
+    d:"Operations agents watch the queue, escalate what's stuck, and post a single shift summary to Slack instead of a stream of separate pings.",
+    dept:"Operations", tool:["n8n","Slack"], color:"t-teal",
+    mini:`<div class="row"><div class="cell">Assigned</div><div class="cell">routed</div></div>
+          <div class="row"><div class="cell">Delayed</div><div class="cell"><span class="pill y">chased</span></div></div>
+          <div class="row"><div class="cell">Escalated</div><div class="cell"><span class="pill r">raised</span></div></div>
+          <p>One shift summary, not a stream of pings.</p>`
+  },
+  {
+    t:"Build a competitor picture that stays current",
+    d:"The Research Agent gathers pricing, positioning and product changes, keeps the file in the vault, and tells you what moved since last time.",
+    dept:"Research", tool:["MCP","Knowledge Vault"], color:"t-plum",
+    mini:`<h4>Landscape — sample</h4>
+          <div class="row"><div class="cell">Pricing</div><div class="cell"><span class="pill y">changed</span></div></div>
+          <div class="row"><div class="cell">Packaging</div><div class="cell">stable</div></div>
+          <div class="row"><div class="cell">Headcount</div><div class="cell">tracked</div></div>`
+  },
+  {
+    t:"Screen applicants against the actual job",
+    d:"Score every CV on the requirements you wrote, not on keywords. Each score cites the line in the application that earned it.",
+    dept:"People", tool:["Knowledge Vault"], color:"t-slate",
+    mini:`<h4>Ops Coordinator — screening</h4>
+          <div class="row"><div class="cell"><span class="pill g">Strong</span></div><div class="cell"><span class="pill y">Possible</span></div></div>
+          <div class="row"><div class="cell"><span class="pill r">No</span></div><div class="cell">graded</div></div>
+          <p>Each score cites the line that earned it.</p>`
+  },
+  {
+    t:"Onboard a new hire without writing the plan twice",
+    d:"Describe the role once. The agent assembles the first-month plan, the accounts to create, and the reading list from your own vault.",
+    dept:"People", tool:["Knowledge Vault","Slack"], color:"t-olive",
+    mini:`<h4>Onboarding plan</h4>
+          <div class="row"><div class="cell">Accounts</div><div class="cell">to create</div></div>
+          <div class="row"><div class="cell">Reading</div><div class="cell">from vault</div></div>
+          <div class="row"><div class="cell">Check-ins</div><div class="cell">scheduled</div></div>`
+  },
+  {
+    t:"Describe a company and watch it get built",
+    d:"Plain English in, a runnable org out: an orchestrator, department heads, and workers, each with the tools and the model that suits the job.",
+    dept:"Executive", tool:["n8n","MCP"], color:"t-clay",
+    mini:`<h4>Agent canvas</h4>
+          <div class="row"><div class="node">Orchestrator</div></div>
+          <div class="row"><div class="node">Sales</div><div class="node">Ops</div><div class="node">Fin</div></div>
+          <div class="row"><div class="cell">Agents</div><div class="cell">from your brief</div></div>
+          <div class="row"><div class="cell">Tools</div><div class="cell">per agent</div></div>`
+  },
+  {
+    t:"Decide once where agents may act on their own",
+    d:"Set the approval policy per department. Anything that sends, spends or deletes stops for a human — in every mode, with no way to switch that off.",
+    dept:"Executive", tool:["MCP"], color:"t-green",
+    mini:`<h4>Approval policy</h4>
+          <div class="row"><div class="cell">Read data</div><div class="cell"><span class="pill g">auto</span></div></div>
+          <div class="row"><div class="cell">Send mail</div><div class="cell"><span class="pill y">ask</span></div></div>
+          <div class="row"><div class="cell">Delete</div><div class="cell"><span class="pill r">always ask</span></div></div>`
+  }
+];
+
+const list=document.getElementById('list'), count=document.getElementById('count');
+const q=document.getElementById('q'), dept=document.getElementById('dept'), tool=document.getElementById('tool');
+
+function render(){
+  const term=q.value.trim().toLowerCase();
+  const d=dept.value, tl=tool.value;
+  document.getElementById('lblDept').textContent=d;
+  document.getElementById('lblTool').textContent=tl;
+
+  const rows=DATA.filter(x=>{
+    if(d!=='All' && x.dept!==d) return false;
+    if(tl!=='All' && !x.tool.includes(tl)) return false;
+    if(term && !(x.t+' '+x.d+' '+x.dept).toLowerCase().includes(term)) return false;
+    return true;
+  });
+
+  count.textContent = rows.length + (rows.length===1?' use case':' use cases');
+  list.innerHTML = rows.length ? rows.map(x=>`
+    <div class="card">
+      <div class="thumb ${x.color}">
+        <span class="illus">Illustrative</span>
+        <div class="mini">${x.mini}</div>
+      </div>
+      <div class="body">
+        <h3>${x.t}</h3>
+        <p>${x.d}</p>
+        <div class="meta">${x.dept}<span class="dot">·</span>${x.tool.join(', ')}</div>
+      </div>
+    </div>`).join('')
+  : `<div class="empty">No use cases match that. Try clearing a filter.</div>`;
+}
+
+q.addEventListener('input',render);
+dept.addEventListener('change',render);
+tool.addEventListener('change',render);
+render();
+</script>
+</body>
+</html>
