@@ -1,11 +1,11 @@
 {
   "style.css": {
-    "v": 3,
-    "sha256": "5281bedcd632e3d14b09597707b9ee92afb434f51f78023b2908ba8c63a82871"
+    "v": 4,
+    "sha256": "fc3274d8c77da3b5966a00d09c06deb2dc7a2ac014331db3498283f153444ca7"
   },
   "cta.js": {
-    "v": 2,
-    "sha256": "44c35fa12e23ffb82b581d0b31a96a5ea3000d561fc57c364525346bb19d0d37"
+    "v": 3,
+    "sha256": "22c242a63a43af453305bc28cf0f07d44d67e78a1fda0357a992cf182da86244"
   },
   "demo.mp4": {
     "v": 1,

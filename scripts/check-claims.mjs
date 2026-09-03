@@ -57,6 +57,40 @@ const RATE = /\b\d+(\.\d+)?\s*(%|per\s?cent|min|mins|minutes?|hrs?|hours?|secs?|
 const ratesIn = (s) => s.match(RATE) ?? [];
 
 /**
+ * A whole <section> by id, tags and all.
+ *
+ * Deliberately not a parser: the id is unique, sections are not nested in these
+ * pages, and a regex that would break on nesting is better than a dependency.
+ * Returns null rather than '' when absent, so "section is missing" and "section
+ * is clean" cannot be confused — the first is a failure, the second is a pass.
+ */
+const sectionById = (html, id) => {
+  const m = html.match(new RegExp(`<section[^>]*\\bid="${id}"[\\s\\S]*?</section>`, 'i'));
+  return m ? m[0] : null;
+};
+
+/**
+ * The three forms of the phone number must be the same number.
+ *
+ * It is written once, but written three ways — a display string, an E.164 tel:
+ * and a wa.me path — and nothing about editing one drags the other two along.
+ * A digit fixed in the display string and missed in the tel: link is a number
+ * that looks right on the page and rings the wrong phone, which is the sort of
+ * error no amount of reading catches. So: derive, compare, fail.
+ */
+const phoneProblems = (js) => {
+  const grab = (k) => (js.match(new RegExp(`\\b${k}\\s*:\\s*'([^']*)'`)) ?? [])[1];
+  const display = grab('display'), tel = grab('tel'), wa = grab('wa');
+  const out = [];
+  if (!display || !tel || !wa) return ['PHONE is missing one of display/tel/wa'];
+  const bare = (s) => s.replace(/\D/g, '');
+  if (!tel.startsWith('+')) out.push(`tel "${tel}" is not E.164 — it needs the leading +`);
+  if (bare(display) !== bare(tel)) out.push(`display "${display}" and tel "${tel}" are different numbers`);
+  if (wa !== bare(tel)) out.push(`wa "${wa}" is not tel "${tel}" without its +`);
+  return out;
+};
+
+/**
  * A pricing OFFER, not the word "pricing".
  *
  * A use case about researching a competitor legitimately says "gathers pricing,
@@ -166,6 +200,20 @@ else pass('rate detector flags durations and percentages in copy');
 if (!PRICING_OFFER.test('<h2>Pricing</h2>')) fail('pricing detector missed a Pricing heading');
 else pass('pricing detector flags a pricing surface');
 
+// The phone detector, pointed at every way the three forms can disagree. Each
+// fixture below is a plausible edit, not an absurd one.
+const BAD_PHONES = [
+  ["var x = { display: '+91 94137 37872', tel: '+919413737870', wa: '919413737872' };", 'a typo in tel:'],
+  ["var x = { display: '+91 94137 37870', tel: '+919413737872', wa: '919413737872' };", 'a typo in the displayed number'],
+  ["var x = { display: '+91 94137 37872', tel: '+919413737872', wa: '+919413737872' };", 'a + left on the wa.me path'],
+  ["var x = { display: '+91 94137 37872', tel: '919413737872', wa: '919413737872' };", 'a tel: missing its country prefix'],
+];
+let phoneMissed = 0;
+for (const [fixture, what] of BAD_PHONES) {
+  if (phoneProblems(fixture).length === 0) { phoneMissed++; fail(`phone detector missed ${what}`); }
+}
+if (!phoneMissed) pass(`phone detector flags all ${BAD_PHONES.length} ways the three forms drift`);
+
 // And the mirror. Each of these is a false positive an earlier version of this
 // file actually produced; a detector that cries wolf gets skipped, so the
 // quiet-on-clean half is asserted as hard as the biting half.
@@ -173,6 +221,10 @@ const CLEAN = [
   ['an outcome-free mock-up row', () => digitsIn('<div class="cell">Matched</div><span class="pill g">ok</span>').length],
   ['a heading tag whose NAME contains a digit', () => digitsIn('<h4>Reconciliation</h4>').length],
   ['competitor-research prose mentioning pricing', () => (PRICING_OFFER.test('gathers pricing, positioning and product changes') ? 1 : 0)],
+  ['a phone block whose three forms agree', () =>
+    phoneProblems("var x = { display: '+91 94137 37872', tel: '+919413737872', wa: '919413737872' };").length],
+  ['a section that is present and digit-free', () =>
+    (sectionById('<section id="x"><p>no figures here</p></section>', 'x') === null ? 1 : 0)],
 ];
 let noisy = 0;
 for (const [what, run] of CLEAN) {
@@ -347,6 +399,67 @@ if (versions) {
     if (referenced === 0) fail(`no page references /assets/${name} — the recorded version guards nothing`);
     else pass(`  …and all ${referenced} reference(s) ask for v${rec.v}`);
   }
+}
+
+// =========================================================================
+section(7, 'The design-partner offer carries no figure');
+
+/*
+ * This section is where a number would arrive. Not maliciously — "join five
+ * design partners", "onboarding takes two weeks", "we reply within a day" all
+ * read as helpful specifics, and every one of them is a commitment with no
+ * source behind it. The offer is qualitative on purpose, so the rule is simply:
+ * no digits at all.
+ *
+ * The phone number is not an exception carved out here. It reaches the page
+ * from assets/cta.js at runtime and is never written into the mark-up, so this
+ * scan does not have to know about it — which is also why section 8 exists.
+ */
+const partners = sectionById(read('index.html'), 'partners');
+if (!partners) {
+  fail('no <section id="partners"> in index.html — this check guards nothing');
+} else {
+  const found = digitsIn(partners);
+  if (found.length) {
+    fail(`design-partner section contains digit(s): ${found.join('')} — a count, a ` +
+         `timeline or a price needs a source, and this section has none`);
+  } else {
+    pass('design-partner section is digit-free');
+  }
+  // A section that lost its offer would also pass a digit scan. Assert the shape.
+  const wants = [
+    [/data-cta\b/, 'an email link'],
+    [/data-wa\b/, 'a WhatsApp link'],
+    [/data-tel\b/, 'a phone link'],
+  ];
+  for (const [re, what] of wants) {
+    if (!re.test(partners)) fail(`design-partner section is missing ${what}`);
+  }
+  if (wants.every(([re]) => re.test(partners))) pass('design-partner section offers all three ways in');
+}
+
+// =========================================================================
+section(8, 'The phone number is one number, in three forms');
+
+const ctaJs = read('assets/cta.js');
+const problems = phoneProblems(ctaJs);
+if (problems.length) for (const p of problems) fail(p);
+else pass('display, tel: and wa.me all carry the same digits');
+
+// The point of a single constant file is that nothing else holds a copy. A
+// number pasted into the mark-up would keep working right up until the constant
+// changed, and then quietly disagree with it.
+const telDigits = (ctaJs.match(/\btel\s*:\s*'\+?(\d+)'/) ?? [])[1];
+if (telDigits) {
+  const loose = new RegExp(telDigits.split('').join('[\\s-]*'));
+  let stray = 0;
+  for (const page of PAGES) {
+    if (loose.test(read(page).replace(/<[^>]*>/g, ' '))) {
+      stray++;
+      fail(`${page} has the phone number written into it — it belongs only in assets/cta.js`);
+    }
+  }
+  if (!stray) pass(`the number appears in no page's mark-up — ${PAGES.length} checked`);
 }
 
 // =========================================================================

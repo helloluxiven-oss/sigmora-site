@@ -18,7 +18,7 @@
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
      Bump ?v= on every change, AND update scripts/asset-versions.json — check-claims
      section 6 compares the file hash to that record and fails if they disagree. -->
-<link rel="stylesheet" href="/assets/style.css?v=3">
+<link rel="stylesheet" href="/assets/style.css?v=4">
 </head>
 <body>
 
@@ -189,7 +189,18 @@
          its resting state, and the button is `hidden` in source and revealed by
          JS, so nothing broken is ever shown. -->
     <figure class="orgviz">
-      <svg viewBox="0 0 800 430" role="img" aria-labelledby="ovt ovd" class="orgviz-svg">
+      <!-- TWO LAYOUTS, ONE STATE MACHINE.
+           An SVG scales uniformly, so on a phone the wide tree renders at about
+           0.38 and 15px labels arrive as 5.7px. No font-size can fix that —
+           everything shrinks together. So there is a second drawing, stacked and
+           narrow, that renders near 1:1 below 820px; the wide one is hidden there.
+
+           Neither is a fork of the behaviour. Nodes are addressed by data-node,
+           edges by data-edge, and the script writes to EVERY match rather than to
+           whichever is on screen — so the hidden layout is always already in the
+           right state when a rotation or resize swaps them. Edges carry data-edge
+           and not id for the same reason: an id cannot appear twice in a page. -->
+      <svg viewBox="0 0 800 430" role="img" aria-labelledby="ovt ovd" class="orgviz-svg orgviz-wide">
         <title id="ovt">A SIGMORA agent org</title>
         <desc id="ovd">
           A chief executive agent leading three department heads — Marketing, Sales and Finance.
@@ -198,10 +209,10 @@
         </desc>
 
         <g class="ov-edges" fill="none">
-          <path id="e-mkt" d="M400,74 C400,120 130,112 130,158" />
-          <path id="e-sal" d="M400,74 C400,110 400,120 400,158" />
-          <path id="e-fin" d="M400,74 C400,120 670,112 670,158" />
-          <path id="e-wrk" d="M400,204 C400,240 400,248 400,286" />
+          <path data-edge="mkt" d="M400,74 C400,120 130,112 130,158" />
+          <path data-edge="sal" d="M400,74 C400,110 400,120 400,158" />
+          <path data-edge="fin" d="M400,74 C400,120 670,112 670,158" />
+          <path data-edge="wrk" d="M400,204 C400,240 400,248 400,286" />
         </g>
 
         <g class="ov-node" data-node="ceo" transform="translate(325,28)">
@@ -238,6 +249,63 @@
           <rect width="300" height="44" rx="9" />
           <text class="ov-role" x="16" y="19">Go-to-market plan</text>
           <text class="ov-meta" x="16" y="34" data-label="out">one document, a section per department</text>
+        </g>
+      </svg>
+
+      <!-- The phone layout. Same six nodes, same four edges, same labels — read
+           top to bottom instead of fanning out, with the worker indented under
+           Sales so the second level of delegation still reads as one. The narrow
+           viewBox is the whole point: at 375px this renders at roughly 1:1, so a
+           12px label is a 12px label. -->
+      <svg viewBox="0 0 300 406" role="img" aria-labelledby="ovt-t ovd-t" class="orgviz-svg orgviz-tall">
+        <title id="ovt-t">A SIGMORA agent org</title>
+        <desc id="ovd-t">
+          A chief executive agent leading three department heads — Marketing, Sales and Finance.
+          Sales leads one worker, a pipeline analyst. Work is delegated down the tree and the
+          results are synthesised back into a single deliverable at the bottom.
+        </desc>
+
+        <g class="ov-edges" fill="none">
+          <path data-edge="mkt" d="M14,54 V100 a6,6 0 0 0 6,6 H34" />
+          <path data-edge="sal" d="M20,54 V164 a6,6 0 0 0 6,6 H34" />
+          <path data-edge="fin" d="M26,54 V292 a6,6 0 0 0 6,6 H34" />
+          <path data-edge="wrk" d="M48,192 V228 a6,6 0 0 0 6,6 H60" />
+        </g>
+
+        <g class="ov-node" data-node="ceo" transform="translate(8,8)">
+          <rect width="284" height="46" rx="9" />
+          <text class="ov-role" x="12" y="20">CEO</text>
+          <text class="ov-meta" x="12" y="35" data-label="ceo">lead &middot; orchestrator</text>
+        </g>
+
+        <g class="ov-node" data-node="mkt" transform="translate(34,84)">
+          <rect width="258" height="44" rx="9" />
+          <text class="ov-role" x="12" y="19">Marketing</text>
+          <text class="ov-meta" x="12" y="34" data-label="mkt">department head</text>
+        </g>
+
+        <g class="ov-node" data-node="sal" transform="translate(34,148)">
+          <rect width="258" height="44" rx="9" />
+          <text class="ov-role" x="12" y="19">Sales</text>
+          <text class="ov-meta" x="12" y="34" data-label="sal">department head</text>
+        </g>
+
+        <g class="ov-node ov-worker" data-node="wrk" transform="translate(60,212)">
+          <rect width="232" height="44" rx="9" />
+          <text class="ov-role" x="12" y="19">Pipeline Analyst</text>
+          <text class="ov-meta" x="12" y="34" data-label="wrk">worker &middot; under Sales</text>
+        </g>
+
+        <g class="ov-node" data-node="fin" transform="translate(34,276)">
+          <rect width="258" height="44" rx="9" />
+          <text class="ov-role" x="12" y="19">Finance</text>
+          <text class="ov-meta" x="12" y="34" data-label="fin">department head</text>
+        </g>
+
+        <g class="ov-node ov-deliverable" data-node="out" transform="translate(8,352)">
+          <rect width="284" height="46" rx="9" />
+          <text class="ov-role" x="14" y="20">Go-to-market plan</text>
+          <text class="ov-meta" x="14" y="35" data-label="out">one document, a section per department</text>
         </g>
       </svg>
 
@@ -388,7 +456,107 @@
 </section>
 
 
-<!-- ===== 6. CLOSING CTA =========================================== -->
+<!-- ===== 6. DESIGN PARTNERS ======================================= -->
+<!-- The real ask on a page with no installer. "Request early access" is a form
+     that goes in a queue; this is a description of work done together, and it
+     says what is withheld as plainly as the limits list below it does.
+
+     HOUSE RULE, ENFORCED: no digits anywhere in this section. A count of
+     partners, a timeline, a price or a response time would each need a source
+     and none of them has one. scripts/check-claims.mjs section 7 scans the
+     whole section and fails on any digit — the phone number reaches the page
+     from assets/cta.js at runtime, so it is not an exception to this. -->
+<section class="band inset" id="partners">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="eyebrow">Design partners</div>
+      <h2>Run it on your own work, while it is still being built.</h2>
+      <p>
+        There is no installer to download, so the honest version of “try it” is this: a small number
+        of businesses run SIGMORA on their real workflows while it is being built, and what they run
+        into decides what gets built next.
+      </p>
+    </div>
+
+    <dl class="rails">
+      <div class="rail">
+        <dt>Your org, designed with you</dt>
+        <dd>
+          Not a template with your name on it. We'd go through how the business actually works —
+          who decides what, which jobs repeat — and build the delegation tree around that.
+        </dd>
+      </div>
+      <div class="rail">
+        <dt>Your connectors, wired up</dt>
+        <dd>
+          The MCP servers you already use, registered and tested against your own data rather than a
+          demo set. Each one off until you turn it on.
+        </dd>
+      </div>
+      <div class="rail">
+        <dt>Your first workflows, built alongside you</dt>
+        <dd>
+          The jobs that come round every week, running end to end, with you watching them run and
+          saying where they are wrong.
+        </dd>
+      </div>
+      <div class="rail">
+        <dt>A direct line to the person building it</dt>
+        <dd>
+          No ticket queue in between. What you hit goes on the list, and you see it turn up in a
+          build rather than in a roadmap.
+        </dd>
+      </div>
+    </dl>
+
+    <!-- Same shape as the limits list in the closing CTA, deliberately: what is not
+         on offer is stated in the same voice as what is. -->
+    <dl class="nc-list dp-not">
+      <div class="nc">
+        <dt>An SLA or a support guarantee</dt>
+        <dd>
+          This is <b>a product under construction</b>. When something breaks there is no queue to
+          escalate to — only the person who wrote it.
+        </dd>
+      </div>
+      <div class="nc">
+        <dt>Settled pricing</dt>
+        <dd>
+          <b>Nothing is being sold here.</b> What this costs, if anything, is a conversation for
+          when there is something to install.
+        </dd>
+      </div>
+      <div class="nc">
+        <dt>A stable product underneath you</dt>
+        <dd>
+          Interfaces, defaults and whole features <b>will change while you are using it</b>. That is
+          the trade: you get to shape them, and you carry the churn of them moving.
+        </dd>
+      </div>
+    </dl>
+
+    <p class="dp-fit">
+      <b>Who it suits.</b> Businesses with repetitive back-office work — finance ops, vendor
+      management, reporting — where the same job comes round every week and somebody senior is
+      still doing it by hand.
+    </p>
+
+    <!-- Three ways to start, all upgraded from assets/cta.js. Each carries an
+         in-page fallback and a readable label, so with scripting off this is
+         three working links to the contact section rather than three dead ones. -->
+    <div class="dp-start">
+      <p>This starts as a conversation, not a signup. Whichever is easiest:</p>
+      <div class="dp-links">
+        <a class="dp-link" data-cta data-cta-subject="partner" data-cta-addr href="#contact">Email</a>
+        <a class="dp-link" data-wa data-cta-subject="partner" href="#contact">WhatsApp</a>
+        <a class="dp-link" data-tel data-tel-show href="#contact">Phone</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== 7. CLOSING CTA =========================================== -->
 <section class="cta" id="contact">
   <div class="wrap">
 
@@ -456,6 +624,7 @@
     <span>Kartikay Khandelwal &middot; Founder &amp; CEO</span>
     <span class="sp"><a href="/use-cases">Use cases</a></span>
     <span><a data-cta data-cta-subject="hello" href="#contact">Contact</a></span>
+    <span><a data-wa data-cta-subject="hello" href="#contact">WhatsApp</a></span>
   </div>
 </footer>
 
@@ -488,7 +657,7 @@
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year,
      and this file holds the contact address. Bump ?v= when CONTACT changes, or the
      old address survives in visitors' caches long after the edit. -->
-<script src="/assets/cta.js?v=2"></script>
+<script src="/assets/cta.js?v=3"></script>
 
 <script>
 /* The org visualisation. Vanilla, no library, no network.
@@ -505,9 +674,18 @@
   var status = document.getElementById('ov-status');
   if (!fig || !btn || !status) return;
 
-  var node = function (n) { return fig.querySelector('[data-node="' + n + '"]'); };
-  var edge = function (e) { return fig.querySelector('#e-' + e); };
-  var label = function (n, t) { var el = fig.querySelector('[data-label="' + n + '"]'); if (el) el.textContent = t; };
+  // There are two drawings of the same org — a wide one and a stacked one for
+  // phones — and exactly one of them is on screen at a time. Every helper below
+  // writes to ALL matches rather than to the visible one. That keeps the state
+  // machine single: one sequence, one set of labels, no branch that only holds
+  // true on the layout that happened to get tested. It also means the off-screen
+  // drawing is already correct the moment a resize or rotation swaps them in.
+  var all = function (sel) { return fig.querySelectorAll(sel); };
+  var nodes = function (n) { return all('[data-node="' + n + '"]'); };
+  var edges = function (e) { return all('[data-edge="' + e + '"]'); };
+  var label = function (n, t) {
+    all('[data-label="' + n + '"]').forEach(function (el) { el.textContent = t; });
+  };
 
   var REST = { ceo: 'lead · orchestrator', mkt: 'department head', sal: 'department head',
                fin: 'department head', wrk: 'worker · under Sales',
@@ -524,15 +702,13 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function setState(n, s) {
-    var g = node(n);
-    if (!g) return;
-    if (s) g.setAttribute('data-state', s); else g.removeAttribute('data-state');
+    nodes(n).forEach(function (g) {
+      if (s) g.setAttribute('data-state', s); else g.removeAttribute('data-state');
+    });
   }
-  function show(n) { var g = node(n); if (g) g.setAttribute('data-shown', '1'); }
+  function show(n) { nodes(n).forEach(function (g) { g.setAttribute('data-shown', '1'); }); }
   function edgeClass(e, c) {
-    var p = edge(e);
-    if (!p) return;
-    p.setAttribute('class', c || '');
+    edges(e).forEach(function (p) { p.setAttribute('class', c || ''); });
   }
 
   function reset() {
