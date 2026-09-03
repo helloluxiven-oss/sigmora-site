@@ -330,6 +330,14 @@ h3{font-size:19px;font-weight:600;letter-spacing:-.012em;line-height:1.3;margin-
   display:inline-block;margin-top:22px;font-size:14px;color:var(--ink-3);
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
+/* Signature under the closing paragraph. That paragraph is first person, so it
+   reads as unsigned without this — the name is the accountability, not a bio. */
+.cta .sig{margin:26px auto 0;line-height:1.45}
+.sig-name{display:block;font-size:15px;font-weight:600;color:var(--ink-1)}
+.sig-role{
+  display:block;margin-top:3px;font-size:12.5px;color:var(--ink-4);
+  letter-spacing:.04em;text-transform:uppercase;
+}
 
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line-soft);background:var(--panel);padding:32px 0 44px}
