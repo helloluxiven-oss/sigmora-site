@@ -57,8 +57,9 @@ Verdict comes from the exit code. The script sets `process.exitCode` rather than
 
 ## Claims the site deliberately does not make
 
-Taken from the launch brief's own Accuracy notes, and rendered on the page rather than
-left out — an absent limitation reads as a limitation that does not exist.
+Taken from the launch brief's own Accuracy notes. The landing page no longer carries a
+dedicated section listing them, so the rule is the weaker one: copy must never claim the
+opposite of any line below.
 
 - Retrieval is keyword and frontmatter based, **not** semantic.
 - Scheduling runs while the app is tray-resident, **not** as a headless service.
