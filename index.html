@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SIGMORA Agentic OS — a local-first AI company for your business</title>
 <meta name="description" content="A local-first desktop app that turns a plain-English description of your business into a working team of AI agents — a CEO that delegates to department heads and workers, running on your own machine.">
+<meta name="theme-color" content="#06060b">
 <link rel="icon" href="/assets/icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/icon-256.png">
 <meta property="og:title" content="SIGMORA Agentic OS">
@@ -14,605 +15,552 @@
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@1&display=swap">
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
      Bump ?v= on every change, AND update scripts/asset-versions.json — check-claims
      section 6 compares the file hash to that record and fails if they disagree. -->
-<link rel="stylesheet" href="/assets/style.css?v=4">
+<link rel="stylesheet" href="/assets/style.css?v=5">
+<!-- Marks the page as scripted before first paint, so scroll reveals can start
+     hidden. Without this line running, nothing is ever hidden. -->
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
 <!-- Every CTA below carries data-cta and ships with an in-page href="#contact"
      fallback. assets/cta.js upgrades each to the real mailto from a single CONTACT
-     constant — the address is written once, for the whole site, in that file. With
-     scripting off the buttons scroll to the contact section rather than pointing at
-     a wrong or dead address. -->
-<nav class="nav">
-  <a class="brand" href="/"><img src="/assets/icon-192.png" alt="">SIGMORA</a>
-  <div class="navlinks">
+     constant — the address is written once, for the whole site, in that file. -->
+<nav class="nav" id="nav">
+  <a class="brand" href="/"><img src="/assets/icon-192.png" alt=""><span>SIGMORA</span></a>
+  <div class="navlinks" id="navlinks">
     <a href="/#demo">Demo</a>
     <a href="/#how">How it works</a>
     <a href="/#local">Local-first</a>
+    <a href="/#partners">Design partners</a>
     <a href="/use-cases">Use cases</a>
   </div>
   <a class="cta-sm" data-cta href="#contact">Request early access</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navlinks">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
 </nav>
 
 
-<!-- ===== 1. HERO ================================================== -->
+<!-- ===== 1. HERO ==================================================
+     Product first: the org runs in the hero rather than halfway down the page.
+     Headline and subhead compress launch-brief §1. No claim here the brief
+     does not make. -->
 <header class="hero">
   <div class="wrap">
-    <div class="status"><span class="dot"></span>In active development — an early look, not generally available</div>
+    <div class="status reveal"><span class="dot"></span>In active development — an early look, not generally available</div>
 
-    <!-- Headline and subhead compress launch-brief §1 ("What it is", one line for a
-         non-technical founder). No claim here that the brief does not make. -->
-    <h1>Describe your business. Get a team of agents that runs it.</h1>
+    <h1 class="reveal d1">Describe your business. <span class="em">Get a team of agents that runs it.</span></h1>
 
-    <p class="lede">
-      SIGMORA Agentic OS is a <strong>local-first desktop app</strong> that turns a plain-English
-      description of your business into a working team of AI agents — a CEO agent that delegates to
-      department heads and workers — which actually run your workflows and produce real
-      deliverables: reports, plans and spreadsheets, on your own machine.
+    <p class="lede reveal d2">
+      A <strong>local-first desktop app</strong> that turns a plain-English description of your
+      business into a working org of AI agents — a CEO that delegates to department heads and
+      workers, and hands back real reports, plans and spreadsheets. On your own machine.
     </p>
 
-    <div class="btnrow">
-      <a class="btn btn-1" data-cta href="#contact">Request early access</a>
-      <a class="btn btn-2" href="#demo">Watch the demo</a>
-      <span class="btnnote">There is no public download yet.</span>
+    <div class="reveal d3">
+      <div class="btnrow">
+        <a class="btn btn-1" data-cta href="#contact">Request early access <span class="arr">&rarr;</span></a>
+        <a class="btn btn-2" href="#demo">Watch the demo</a>
+      </div>
+      <span class="btnnote">There is no public download yet — early access starts as a conversation.</span>
+    </div>
+
+    <!-- ---- the org, live ----------------------------------------------
+         The markup is the finished tree; the script only ADDS the run, and plays
+         it once when the console scrolls into view. Reduced motion jumps to the
+         end state. With scripting off, the finished tree simply stands.
+
+         TWO LAYOUTS, ONE STATE MACHINE. An SVG scales uniformly, so on a phone
+         the wide tree would render its labels at a few pixels. The stacked
+         drawing renders near 1:1 below 820px; the wide one is hidden there. The
+         script writes to EVERY match by data-node / data-edge, so the hidden
+         layout is always already in the right state. -->
+    <div class="console reveal">
+      <div class="console-bar">
+        <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="console-title">SIGMORA — Launch plan</span>
+        <span class="console-mode">Running locally</span>
+      </div>
+      <!-- The instruction is launch-brief §7's verified end-to-end run, quoted. -->
+      <div class="prompt">
+        <span class="prompt-tag">You</span>
+        <span>Draft a plan to launch a new product next month — have marketing, sales, and finance each contribute.<span class="caret" aria-hidden="true"></span></span>
+      </div>
+      <figure class="orgviz">
+        <svg viewBox="0 0 800 430" role="img" aria-labelledby="ovt ovd" class="orgviz-svg orgviz-wide">
+          <title id="ovt">A SIGMORA agent org</title>
+          <desc id="ovd">
+            A chief executive agent leading three department heads — Marketing, Sales and Finance.
+            Sales leads one worker, a pipeline analyst. Work is delegated down the tree and the
+            results are synthesised back into a single deliverable at the bottom.
+          </desc>
+
+          <g class="ov-edges" fill="none">
+            <path data-edge="mkt" d="M400,74 C400,120 130,112 130,158" />
+            <path data-edge="sal" d="M400,74 C400,110 400,120 400,158" />
+            <path data-edge="fin" d="M400,74 C400,120 670,112 670,158" />
+            <path data-edge="wrk" d="M400,204 C400,240 400,248 400,286" />
+          </g>
+
+          <g class="ov-node" data-node="ceo" transform="translate(325,28)">
+            <rect width="150" height="46" rx="9" />
+            <text class="ov-role" x="12" y="20">CEO</text>
+            <text class="ov-meta" x="12" y="35" data-label="ceo">lead &middot; orchestrator</text>
+          </g>
+
+          <g class="ov-node" data-node="mkt" transform="translate(55,158)">
+            <rect width="150" height="46" rx="9" />
+            <text class="ov-role" x="12" y="20">Marketing</text>
+            <text class="ov-meta" x="12" y="35" data-label="mkt">department head</text>
+          </g>
+
+          <g class="ov-node" data-node="sal" transform="translate(325,158)">
+            <rect width="150" height="46" rx="9" />
+            <text class="ov-role" x="12" y="20">Sales</text>
+            <text class="ov-meta" x="12" y="35" data-label="sal">department head</text>
+          </g>
+
+          <g class="ov-node" data-node="fin" transform="translate(595,158)">
+            <rect width="150" height="46" rx="9" />
+            <text class="ov-role" x="12" y="20">Finance</text>
+            <text class="ov-meta" x="12" y="35" data-label="fin">department head</text>
+          </g>
+
+          <g class="ov-node ov-worker" data-node="wrk" transform="translate(325,286)">
+            <rect width="150" height="46" rx="9" />
+            <text class="ov-role" x="12" y="20">Pipeline Analyst</text>
+            <text class="ov-meta" x="12" y="35" data-label="wrk">worker &middot; under Sales</text>
+          </g>
+
+          <g class="ov-node ov-deliverable" data-node="out" transform="translate(250,366)">
+            <rect width="300" height="44" rx="9" />
+            <text class="ov-role" x="16" y="19">Go-to-market plan</text>
+            <text class="ov-meta" x="16" y="34" data-label="out">one document, a section per department</text>
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 300 406" role="img" aria-labelledby="ovt-t ovd-t" class="orgviz-svg orgviz-tall">
+          <title id="ovt-t">A SIGMORA agent org</title>
+          <desc id="ovd-t">
+            A chief executive agent leading three department heads — Marketing, Sales and Finance.
+            Sales leads one worker, a pipeline analyst. Work is delegated down the tree and the
+            results are synthesised back into a single deliverable at the bottom.
+          </desc>
+
+          <g class="ov-edges" fill="none">
+            <path data-edge="mkt" d="M14,54 V100 a6,6 0 0 0 6,6 H34" />
+            <path data-edge="sal" d="M20,54 V164 a6,6 0 0 0 6,6 H34" />
+            <path data-edge="fin" d="M26,54 V292 a6,6 0 0 0 6,6 H34" />
+            <path data-edge="wrk" d="M48,192 V228 a6,6 0 0 0 6,6 H60" />
+          </g>
+
+          <g class="ov-node" data-node="ceo" transform="translate(8,8)">
+            <rect width="284" height="46" rx="9" />
+            <text class="ov-role" x="12" y="20">CEO</text>
+            <text class="ov-meta" x="12" y="35" data-label="ceo">lead &middot; orchestrator</text>
+          </g>
+
+          <g class="ov-node" data-node="mkt" transform="translate(34,84)">
+            <rect width="258" height="44" rx="9" />
+            <text class="ov-role" x="12" y="19">Marketing</text>
+            <text class="ov-meta" x="12" y="34" data-label="mkt">department head</text>
+          </g>
+
+          <g class="ov-node" data-node="sal" transform="translate(34,148)">
+            <rect width="258" height="44" rx="9" />
+            <text class="ov-role" x="12" y="19">Sales</text>
+            <text class="ov-meta" x="12" y="34" data-label="sal">department head</text>
+          </g>
+
+          <g class="ov-node ov-worker" data-node="wrk" transform="translate(60,212)">
+            <rect width="232" height="44" rx="9" />
+            <text class="ov-role" x="12" y="19">Pipeline Analyst</text>
+            <text class="ov-meta" x="12" y="34" data-label="wrk">worker &middot; under Sales</text>
+          </g>
+
+          <g class="ov-node" data-node="fin" transform="translate(34,276)">
+            <rect width="258" height="44" rx="9" />
+            <text class="ov-role" x="12" y="19">Finance</text>
+            <text class="ov-meta" x="12" y="34" data-label="fin">department head</text>
+          </g>
+
+          <g class="ov-node ov-deliverable" data-node="out" transform="translate(8,352)">
+            <rect width="284" height="46" rx="9" />
+            <text class="ov-role" x="14" y="20">Go-to-market plan</text>
+            <text class="ov-meta" x="14" y="35" data-label="out">one document, a section per department</text>
+          </g>
+        </svg>
+
+        <figcaption class="orgviz-foot">
+          <button type="button" class="orgviz-btn" id="ov-run" hidden>Run it</button>
+          <p class="orgviz-status" id="ov-status" role="status" aria-live="polite">
+            One instruction, delegated to three departments and a worker, synthesised back into a
+            single deliverable.
+          </p>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="trust reveal">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Runs on your machine</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Private mode kill-switch</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>You approve risky actions</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Full audit trail</span>
     </div>
   </div>
 </header>
 
 
 <!-- ===== 2. DEMO ================================================== -->
-<section class="band inset" id="demo">
+<section class="band" id="demo">
   <div class="wrap">
-    <div class="band-head">
+    <div class="band-head center reveal">
       <div class="eyebrow">Demo</div>
-      <h2>One instruction, a whole department deep.</h2>
-      <p>
-        The clearest way to show what this is, is to watch a single instruction travel down the org
-        and come back as a finished piece of work.
-      </p>
+      <h2>One instruction, <span class="em">a whole department deep.</span></h2>
+      <p>Watch a single instruction travel down the org and come back as a finished piece of work.</p>
     </div>
 
-    <!-- The recording, self-hosted. No iframe: an embed would need frame-src in the CSP
-         and would bring third-party cookies to a page whose argument is that nothing
-         leaves your machine. `media-src` is not set in vercel.json, so it falls back to
-         `default-src 'self'` — which a file served from /assets satisfies.
-
-         Encoded from the source capture with `-an` (no audio track at all), CRF 21 at
-         native 720p — the source is 1280x720, and upscaling would add bytes, not detail.
-         The frame is aspect-ratio 16/9 and the file is 16:9, so it fills exactly.
-
-         No autoplay, no loop, no muted-autoplay: it starts when a person asks it to. -->
-    <div class="demo-frame">
+    <!-- The recording, self-hosted. No iframe: an embed would need frame-src in the
+         CSP and would bring third-party cookies to a page whose argument is that
+         nothing leaves your machine. No autoplay, no loop: it starts when a person
+         asks it to. -->
+    <div class="demo-frame reveal">
       <video controls playsinline preload="metadata"
              poster="/assets/demo-poster.jpg?v=1" width="1280" height="720">
         <source src="/assets/demo.mp4?v=1" type="video/mp4">
       </video>
     </div>
 
-    <!-- Same discipline as the use-cases panels, which carry an "Illustrative" badge and
-         the illus-note above the grid. The recording ends by opening a generated
-         deliverable, and a figure on screen reads as a measured one unless the page says
-         otherwise — so it says otherwise here rather than going quiet in the one place
-         the claim guard cannot look. Pixels are not text; check-claims cannot read a
-         video, so this caption is the only thing standing where the guard would be. -->
+    <!-- The recording ends by opening a generated deliverable, and a figure on
+         screen reads as a measured one unless the page says otherwise. Pixels are
+         not text; check-claims cannot read a video, so this caption stands where
+         the guard would be. -->
     <p class="demo-cap">Recorded on a demo org with synthetic data. Any figures on screen are illustrative.</p>
 
-    <!-- The run described below is launch-brief §7, "What it can do right now", quoted
-         as the verified end-to-end run it records there. The brief's per-department
-         detail (contract values, month-one targets) is deliberately not repeated:
-         those are outputs of one run, not properties of the product. -->
-    <p class="demo-note">
-      <b>What it shows.</b> The run recorded in the brief: <em>“Draft a plan to launch a new
-      product next month — have marketing, sales, and finance each contribute.”</em> The CEO agent
-      reads context, then delegates to the Marketing, Sales and Finance department heads — Sales in
-      turn pulls in its own analyst — and synthesises their work into one consolidated go-to-market
-      plan, with a section per department. The delegation streams live as it happens.
+    <!-- launch-brief §7, quoted as the verified run it records. Per-department
+         outputs of that one run are deliberately not repeated. -->
+    <p class="demo-note reveal">
+      <b>What it shows.</b> The CEO agent reads context, then delegates to the Marketing, Sales and
+      Finance department heads — Sales in turn pulls in its own analyst — and synthesises their work
+      into one consolidated go-to-market plan, with a section per department. The delegation streams
+      live as it happens.
     </p>
   </div>
 </section>
 
 
 <!-- ===== 3. HOW IT WORKS ========================================== -->
-<section class="band" id="how">
+<section class="band inset" id="how">
   <div class="wrap">
-    <div class="band-head">
+    <div class="band-head reveal">
       <div class="eyebrow">How it works</div>
-      <h2>A real org, not one long chat.</h2>
+      <h2>A real org, <span class="em">not one long chat.</span></h2>
       <p>
         A loop around a single model is one improviser doing everything in prose. SIGMORA runs a
-        bounded tree of specialised agents, each with its own instructions, its own model, and only
+        bounded tree of specialised agents — each with its own instructions, its own model, and only
         the tools it was granted.
       </p>
     </div>
 
     <div class="grid g3">
-      <!-- Step one: launch-brief, "Describe-to-build (the Business Architect)". -->
-      <div class="box step">
-        <div class="eyebrow">Step one</div>
+      <!-- launch-brief, "Describe-to-build (the Business Architect)". -->
+      <div class="box step reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></div>
+        <div class="kicker">Describe</div>
         <h3>You describe it</h3>
         <p>
-          Describe your business in plain English. It generates a complete agent org — the roles, the
-          delegation tree, starter workflows and a data plan.
+          In plain English. It generates a complete agent org — the roles, the delegation tree,
+          starter workflows and a data plan.
         </p>
         <p>
-          An “Improve my org” advisor reads your <strong>real run history</strong> afterwards and
-          proposes concrete changes.
+          Later, an “Improve my org” advisor reads your <strong>real run history</strong> and proposes
+          concrete changes.
         </p>
       </div>
 
-      <!-- Step two: launch-brief §2, "The architecture — how the multi-agent hierarchy works". -->
-      <div class="box step">
-        <div class="eyebrow">Step two</div>
+      <!-- launch-brief §2, "The architecture". -->
+      <div class="box step reveal d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg></div>
+        <div class="kicker">Build</div>
         <h3>It builds the org</h3>
         <p>
-          An org is a <strong>tree of agent nodes</strong>: a lead orchestrator — the CEO — leading
-          department heads for Marketing, Sales, Finance and the rest, which in turn lead workers.
+          A <strong>tree of agent nodes</strong>: a CEO leading department heads for Marketing, Sales,
+          Finance and the rest, which in turn lead workers.
         </p>
         <p>
-          Each node is a role, its own system instructions, a model, a tool allowlist, and its direct
-          reports. Nothing is shared implicitly.
+          Each node has its own role, instructions, model, tool allowlist and direct reports. Nothing
+          is shared implicitly.
         </p>
       </div>
 
-      <!-- Step three: launch-brief §2 (delegation) and §3 (the model routes, code
-           computes). The deterministic-numbers line belongs here rather than in its
-           own section: it is what makes a delivered report usable. -->
-      <div class="box step">
-        <div class="eyebrow">Step three</div>
+      <!-- launch-brief §2 (delegation) and §3 (the model routes, code computes). -->
+      <div class="box step reveal d2">
+        <div class="ico g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></div>
+        <div class="kicker">Run</div>
         <h3>They do the work</h3>
         <p>
           Every manager holds a <code>delegate</code> tool scoped to its <strong>direct reports
-          only</strong>. Calling it spawns a fresh, isolated run for that child, then returns the
-          result to the parent. Results bubble up, and the lead synthesises the final answer.
+          only</strong>. Each child runs fresh and isolated; results bubble up and the lead
+          synthesises the answer.
         </p>
         <p>
           Anything carrying a number is assembled by <strong>code, not the model</strong> — totals,
-          metrics and tables are computed exactly. The model writes the prose around them.
+          metrics and tables are computed exactly.
         </p>
       </div>
     </div>
 
-    <!-- ---- the org, drawn ------------------------------------------------
-         Makes steps two and three concrete: the same delegation the brief
-         describes in §2, as a shape rather than a paragraph.
-
-         Numbers: there are none. Every label is qualitative on purpose — the
-         coordinates in the viewBox and the transforms are this drawing's own
-         geometry, the same category as the demo frame's 16:9, not measurements
-         of anything the product did.
-
-         Renders finished with scripting off: the tree below is static markup in
-         its resting state, and the button is `hidden` in source and revealed by
-         JS, so nothing broken is ever shown. -->
-    <figure class="orgviz">
-      <!-- TWO LAYOUTS, ONE STATE MACHINE.
-           An SVG scales uniformly, so on a phone the wide tree renders at about
-           0.38 and 15px labels arrive as 5.7px. No font-size can fix that —
-           everything shrinks together. So there is a second drawing, stacked and
-           narrow, that renders near 1:1 below 820px; the wide one is hidden there.
-
-           Neither is a fork of the behaviour. Nodes are addressed by data-node,
-           edges by data-edge, and the script writes to EVERY match rather than to
-           whichever is on screen — so the hidden layout is always already in the
-           right state when a rotation or resize swaps them. Edges carry data-edge
-           and not id for the same reason: an id cannot appear twice in a page. -->
-      <svg viewBox="0 0 800 430" role="img" aria-labelledby="ovt ovd" class="orgviz-svg orgviz-wide">
-        <title id="ovt">A SIGMORA agent org</title>
-        <desc id="ovd">
-          A chief executive agent leading three department heads — Marketing, Sales and Finance.
-          Sales leads one worker, a pipeline analyst. Work is delegated down the tree and the
-          results are synthesised back into a single deliverable at the bottom.
-        </desc>
-
-        <g class="ov-edges" fill="none">
-          <path data-edge="mkt" d="M400,74 C400,120 130,112 130,158" />
-          <path data-edge="sal" d="M400,74 C400,110 400,120 400,158" />
-          <path data-edge="fin" d="M400,74 C400,120 670,112 670,158" />
-          <path data-edge="wrk" d="M400,204 C400,240 400,248 400,286" />
-        </g>
-
-        <g class="ov-node" data-node="ceo" transform="translate(325,28)">
-          <rect width="150" height="46" rx="9" />
-          <text class="ov-role" x="12" y="20">CEO</text>
-          <text class="ov-meta" x="12" y="35" data-label="ceo">lead &middot; orchestrator</text>
-        </g>
-
-        <g class="ov-node" data-node="mkt" transform="translate(55,158)">
-          <rect width="150" height="46" rx="9" />
-          <text class="ov-role" x="12" y="20">Marketing</text>
-          <text class="ov-meta" x="12" y="35" data-label="mkt">department head</text>
-        </g>
-
-        <g class="ov-node" data-node="sal" transform="translate(325,158)">
-          <rect width="150" height="46" rx="9" />
-          <text class="ov-role" x="12" y="20">Sales</text>
-          <text class="ov-meta" x="12" y="35" data-label="sal">department head</text>
-        </g>
-
-        <g class="ov-node" data-node="fin" transform="translate(595,158)">
-          <rect width="150" height="46" rx="9" />
-          <text class="ov-role" x="12" y="20">Finance</text>
-          <text class="ov-meta" x="12" y="35" data-label="fin">department head</text>
-        </g>
-
-        <g class="ov-node ov-worker" data-node="wrk" transform="translate(325,286)">
-          <rect width="150" height="46" rx="9" />
-          <text class="ov-role" x="12" y="20">Pipeline Analyst</text>
-          <text class="ov-meta" x="12" y="35" data-label="wrk">worker &middot; under Sales</text>
-        </g>
-
-        <g class="ov-node ov-deliverable" data-node="out" transform="translate(250,366)">
-          <rect width="300" height="44" rx="9" />
-          <text class="ov-role" x="16" y="19">Go-to-market plan</text>
-          <text class="ov-meta" x="16" y="34" data-label="out">one document, a section per department</text>
-        </g>
-      </svg>
-
-      <!-- The phone layout. Same six nodes, same four edges, same labels — read
-           top to bottom instead of fanning out, with the worker indented under
-           Sales so the second level of delegation still reads as one. The narrow
-           viewBox is the whole point: at 375px this renders at roughly 1:1, so a
-           12px label is a 12px label. -->
-      <svg viewBox="0 0 300 406" role="img" aria-labelledby="ovt-t ovd-t" class="orgviz-svg orgviz-tall">
-        <title id="ovt-t">A SIGMORA agent org</title>
-        <desc id="ovd-t">
-          A chief executive agent leading three department heads — Marketing, Sales and Finance.
-          Sales leads one worker, a pipeline analyst. Work is delegated down the tree and the
-          results are synthesised back into a single deliverable at the bottom.
-        </desc>
-
-        <g class="ov-edges" fill="none">
-          <path data-edge="mkt" d="M14,54 V100 a6,6 0 0 0 6,6 H34" />
-          <path data-edge="sal" d="M20,54 V164 a6,6 0 0 0 6,6 H34" />
-          <path data-edge="fin" d="M26,54 V292 a6,6 0 0 0 6,6 H34" />
-          <path data-edge="wrk" d="M48,192 V228 a6,6 0 0 0 6,6 H60" />
-        </g>
-
-        <g class="ov-node" data-node="ceo" transform="translate(8,8)">
-          <rect width="284" height="46" rx="9" />
-          <text class="ov-role" x="12" y="20">CEO</text>
-          <text class="ov-meta" x="12" y="35" data-label="ceo">lead &middot; orchestrator</text>
-        </g>
-
-        <g class="ov-node" data-node="mkt" transform="translate(34,84)">
-          <rect width="258" height="44" rx="9" />
-          <text class="ov-role" x="12" y="19">Marketing</text>
-          <text class="ov-meta" x="12" y="34" data-label="mkt">department head</text>
-        </g>
-
-        <g class="ov-node" data-node="sal" transform="translate(34,148)">
-          <rect width="258" height="44" rx="9" />
-          <text class="ov-role" x="12" y="19">Sales</text>
-          <text class="ov-meta" x="12" y="34" data-label="sal">department head</text>
-        </g>
-
-        <g class="ov-node ov-worker" data-node="wrk" transform="translate(60,212)">
-          <rect width="232" height="44" rx="9" />
-          <text class="ov-role" x="12" y="19">Pipeline Analyst</text>
-          <text class="ov-meta" x="12" y="34" data-label="wrk">worker &middot; under Sales</text>
-        </g>
-
-        <g class="ov-node" data-node="fin" transform="translate(34,276)">
-          <rect width="258" height="44" rx="9" />
-          <text class="ov-role" x="12" y="19">Finance</text>
-          <text class="ov-meta" x="12" y="34" data-label="fin">department head</text>
-        </g>
-
-        <g class="ov-node ov-deliverable" data-node="out" transform="translate(8,352)">
-          <rect width="284" height="46" rx="9" />
-          <text class="ov-role" x="14" y="20">Go-to-market plan</text>
-          <text class="ov-meta" x="14" y="35" data-label="out">one document, a section per department</text>
-        </g>
-      </svg>
-
-      <figcaption class="orgviz-foot">
-        <button type="button" class="orgviz-btn" id="ov-run" hidden>Run it</button>
-        <p class="orgviz-status" id="ov-status" role="status" aria-live="polite">
-          One instruction, delegated to three departments and a worker, synthesised back into a
-          single deliverable.
-        </p>
-      </figcaption>
-    </figure>
-
     <!-- launch-brief §2, "Safety rails built into the engine". -->
-    <dl class="rails" style="margin-top:34px">
-      <div class="rail">
-        <dt>It cannot run away</dt>
-        <dd>
-          Hard caps on delegation depth, number of agent runs, total iterations, per-tool call
-          budgets and wall-clock time. The clock is shared across the whole run, so one limit winds
-          the entire tree down rather than leaving branches spinning.
-        </dd>
+    <div class="rails-head reveal">
+      <h3>Built with brakes.</h3>
+      <p>Autonomy you can actually leave running.</p>
+    </div>
+    <div class="grid g3">
+      <div class="box reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></div>
+        <h3>It cannot run away</h3>
+        <p>
+          Hard caps on delegation depth, agent runs, iterations, per-tool call budgets and wall-clock
+          time. The clock is shared across the whole run, so one limit winds the entire tree down.
+        </p>
       </div>
-      <div class="rail">
-        <dt>You sign off on risk</dt>
-        <dd>
+      <div class="box reveal d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>You sign off on risk</h3>
+        <p>
           Any risky or irreversible tool is wrapped in a human approval gate. It pauses and waits for
           you before it runs.
-        </dd>
+        </p>
       </div>
-      <div class="rail">
-        <dt>Everything is on the record</dt>
-        <dd>
+      <div class="box reveal d2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div>
+        <h3>Everything is on the record</h3>
+        <p>
           A full audit trail of every start, every delegation, every tool call and every result.
-        </dd>
+        </p>
       </div>
-    </dl>
+    </div>
   </div>
 </section>
 
 
 <!-- ===== 4. WHY LOCAL-FIRST ======================================= -->
-<section class="band inset" id="local">
+<section class="band" id="local">
   <div class="wrap">
-    <div class="band-head">
+    <div class="band-head reveal">
       <div class="eyebrow">Why local-first</div>
-      <h2>Private mode is a switch, not a promise.</h2>
+      <h2>Private mode is a switch, <span class="em">not a promise.</span></h2>
       <p>
-        Most tools ask you to trust a policy. This one is a desktop app, so the question of what
-        leaves your machine has an answer you can enforce rather than a paragraph you have to
-        believe.
+        Most tools ask you to trust a policy. This is a desktop app, so what leaves your machine has
+        an answer you can enforce — not a paragraph you have to believe.
       </p>
     </div>
 
-    <div class="grid g2">
-      <!-- launch-brief §5 (tech stack: Electron, Windows installer) and the feature
-           list ("Three ways to use it"). -->
-      <div class="box">
-        <h3>It installs on your machine</h3>
+    <div class="bento">
+      <!-- launch-brief §2 (kill-switch) and §4. "Private mode" is the shipped UI
+           label (apps/web/app/components/Rail.tsx in the product repo). -->
+      <div class="box reveal">
+        <div class="switch" aria-hidden="true"><span class="track"></span>Private mode<small>every agent local</small></div>
+        <h3>One toggle forces every agent local</h3>
         <p>
-          A packaged desktop app that runs on your own hardware, alongside a web UI and a terminal
-          client for the same engine.
-        </p>
-        <p>
-          Your knowledge base is a <strong>local Markdown vault</strong> — ordinary files in
-          ordinary folders, on your disk, that your agents read from and write to.
-        </p>
-      </div>
-
-      <!-- launch-brief §2 (kill-switch) and §4 ("A hard privacy kill-switch").
-           "Private mode" is the shipped UI label, not a name written for this page:
-           see apps/web/app/components/Rail.tsx and app/api/models/route.ts in the
-           product repo, which render "Private mode" to the user. The brief calls the
-           same flag "Internal mode", which is the internal name for it in the engine. -->
-      <div class="box">
-        <h3>Private mode forces every agent local</h3>
-        <p>
-          One toggle forces <strong>every</strong> agent — the lead and every worker under it — onto
-          a local model, and blocks all cloud traffic. Not a default that a per-agent override can
-          quietly undo.
+          The lead and every worker under it move onto a local model, and all cloud traffic is
+          blocked. Not a default that a per-agent override can quietly undo.
         </p>
         <p>
           Cloud models are bring-your-own-key and stay inert while it is on. Local models run through
-          Ollama, with no key and no account.
+          Ollama — no key, no account.
         </p>
       </div>
+
+      <!-- launch-brief §5 (Electron, Windows installer) and "Three ways to use it". -->
+      <div class="box reveal d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+        <h3>It installs on your machine</h3>
+        <p>
+          A packaged desktop app on your own hardware, alongside a web UI and a terminal client for
+          the same engine.
+        </p>
+        <p>
+          Your knowledge base is a <strong>local Markdown vault</strong> — ordinary files in ordinary
+          folders that your agents read from and write to.
+        </p>
+      </div>
+
+      <div class="box wide reveal">
+        <h3>Connectors — off until you turn them on</h3>
+        <p class="provenance">
+          Connectors are the one surface that <em>can</em> reach outside, so they are what Private mode
+          cuts off. Each is MCP-backed: you register the server, choose which tools it grants, and
+          attach it to the agents that should hold it. This list is generated from the product's own
+          connector catalogue, so the site cannot claim an integration the app does not offer.
+        </p>
+        <div class="conns" id="conns"></div>
+      </div>
     </div>
-
-    <p class="provenance" style="margin-top:26px">
-      Connectors are the surface that <em>can</em> reach outside, so they are the surface Private
-      mode cuts off. Each one is MCP-backed: you register the server, choose which of its tools it
-      grants, and attach it to the agents that should hold it. Nothing is connected by default. This
-      list is generated from the product's own connector catalogue rather than written by hand, so
-      the site cannot quietly claim an integration the app does not offer.
-    </p>
-
-    <div class="conns" id="conns" style="margin-top:20px"></div>
   </div>
 </section>
 
 
 <!-- ===== 5. USE CASES ============================================= -->
-<section class="band" id="use-cases">
+<section class="band inset" id="use-cases">
   <div class="wrap">
-    <div class="band-head">
+    <div class="band-head reveal">
       <div class="eyebrow">Use cases</div>
-      <h2>What people actually point it at.</h2>
-      <p>
-        Departments, workflows and automations an agent org can run. Three below; the rest are on
-        the use-cases page.
-      </p>
+      <h2>What people <span class="em">actually point it at.</span></h2>
+      <p>Departments, workflows and automations an agent org can run.</p>
     </div>
 
-    <!-- All three are quoted verbatim from the DATA block in use-cases.html — the same
-         copy the claim guard already scans — rather than rewritten for this page. -->
+    <!-- Quoted verbatim from the DATA block in use-cases.html — the same copy the
+         claim guard already scans — rather than rewritten for this page. -->
     <div class="grid g3">
-      <a class="pick" href="/use-cases">
+      <a class="pick reveal" href="/use-cases">
         <div class="dept">Finance</div>
         <h3>Reconcile supplier invoices against the ledger</h3>
         <p>
           The Finance Agent matches invoices to what was actually delivered, flags the gaps, and
           shows its working — every figure traced to a source row.
         </p>
+        <span class="go">Explore &rarr;</span>
       </a>
-      <a class="pick" href="/use-cases">
+      <a class="pick reveal d1" href="/use-cases">
         <div class="dept">Operations</div>
         <h3>Route the day's jobs and chase the exceptions</h3>
         <p>
           Operations agents watch the queue, escalate what's stuck, and post a single shift summary
           to Slack instead of a stream of separate pings.
         </p>
+        <span class="go">Explore &rarr;</span>
       </a>
-      <a class="pick" href="/use-cases">
+      <a class="pick reveal d2" href="/use-cases">
         <div class="dept">Sales</div>
         <h3>Account research before every call</h3>
         <p>
           The Research Agent reads your vault, the account's recent mail and the notes in Sheets,
           then returns a one-page brief on what changed and where you fit.
         </p>
+        <span class="go">Explore &rarr;</span>
       </a>
     </div>
 
-    <!-- The count is the length of the DATA array in use-cases.html, which currently
-         holds sixteen cards. scripts/check-claims.mjs section 0 fails the build if that
-         array drops below twelve, so this figure cannot silently drift far from true;
-         re-count and edit here if cards are added. -->
+    <!-- The count is checked against the DATA array in use-cases.html by
+         scripts/check-claims.mjs section 0; the build fails if they disagree. -->
     <a class="morelink" href="/use-cases">See all 16 use cases <span>&rarr;</span></a>
   </div>
 </section>
 
 
-<!-- ===== 6. DESIGN PARTNERS ======================================= -->
-<!-- The real ask on a page with no installer. "Request early access" is a form
-     that goes in a queue; this is a description of work done together, and it
-     says what is withheld as plainly as the limits list below it does.
-
+<!-- ===== 6. DESIGN PARTNERS =======================================
      HOUSE RULE, ENFORCED: no digits anywhere in this section. A count of
-     partners, a timeline, a price or a response time would each need a source
-     and none of them has one. scripts/check-claims.mjs section 7 scans the
-     whole section and fails on any digit — the phone number reaches the page
-     from assets/cta.js at runtime, so it is not an exception to this. -->
-<section class="band inset" id="partners">
-  <div class="wrap">
-    <div class="band-head">
-      <div class="eyebrow">Design partners</div>
-      <h2>Run it on your own work, while it is still being built.</h2>
-      <p>
-        There is no installer to download, so the honest version of “try it” is this: a small number
-        of businesses run SIGMORA on their real workflows while it is being built, and what they run
-        into decides what gets built next.
+     partners, a timeline, a price or a response time would each need a source.
+     scripts/check-claims.mjs section 7 scans the whole section and fails on any
+     digit — which is why the icons in here carry no numeric geometry and the
+     phone number arrives from assets/cta.js at runtime. -->
+<section class="band" id="partners">
+  <div class="wrap dp">
+    <div class="reveal">
+      <div class="band-head">
+        <div class="eyebrow">Design partners</div>
+        <h2>Run it on your own work, <span class="em">while it is still being built.</span></h2>
+        <p>
+          There is no installer to download, so the honest version of “try it” is this: a small number
+          of businesses run SIGMORA on their real workflows, and what they run into decides what gets
+          built next.
+        </p>
+      </div>
+
+      <p class="dp-fit">
+        <b>Who it suits.</b> Businesses with repetitive back-office work — finance ops, vendor
+        management, reporting — where the same job comes round every week and somebody senior is
+        still doing it by hand.
       </p>
+
+      <!-- Three equal ways in, all upgraded from assets/cta.js, each with an
+           in-page fallback and a readable label. -->
+      <div class="dp-start">
+        <p>This starts as a conversation, not a signup. Whichever is easiest:</p>
+        <div class="dp-links">
+          <a class="dp-link" data-cta data-cta-subject="partner" data-cta-addr href="#contact">Email</a>
+          <a class="dp-link" data-wa data-cta-subject="partner" href="#contact">WhatsApp</a>
+          <a class="dp-link" data-tel data-tel-show href="#contact">Phone</a>
+        </div>
+      </div>
     </div>
 
-    <dl class="rails">
-      <div class="rail">
-        <dt>Your org, designed with you</dt>
-        <dd>
-          Not a template with your name on it. We'd go through how the business actually works —
-          who decides what, which jobs repeat — and build the delegation tree around that.
-        </dd>
-      </div>
-      <div class="rail">
-        <dt>Your connectors, wired up</dt>
-        <dd>
-          The MCP servers you already use, registered and tested against your own data rather than a
-          demo set. Each one off until you turn it on.
-        </dd>
-      </div>
-      <div class="rail">
-        <dt>Your first workflows, built alongside you</dt>
-        <dd>
-          The jobs that come round every week, running end to end, with you watching them run and
-          saying where they are wrong.
-        </dd>
-      </div>
-      <div class="rail">
-        <dt>A direct line to the person building it</dt>
-        <dd>
-          No ticket queue in between. What you hit goes on the list, and you see it turn up in a
-          build rather than in a roadmap.
-        </dd>
-      </div>
-    </dl>
+    <div class="reveal d1">
+      <ul class="dp-list">
+        <li><span class="tick">✓</span><div><b>Your org, designed with you</b><span>Not a template with your name on it. We go through how the business actually works — who decides what, which jobs repeat — and build the delegation tree around that.</span></div></li>
+        <li><span class="tick">✓</span><div><b>Your connectors, wired up</b><span>The MCP servers you already use, registered and tested against your own data rather than a demo set. Each one off until you turn it on.</span></div></li>
+        <li><span class="tick">✓</span><div><b>Your first workflows, built alongside you</b><span>The jobs that come round every week, running end to end, with you watching them run and saying where they are wrong.</span></div></li>
+        <li><span class="tick">✓</span><div><b>A direct line to the person building it</b><span>No ticket queue in between. What you hit goes on the list, and you see it turn up in a build rather than in a roadmap.</span></div></li>
+      </ul>
 
-    <!-- Same shape as the limits list in the closing CTA, deliberately: what is not
-         on offer is stated in the same voice as what is. -->
-    <dl class="nc-list dp-not">
-      <div class="nc">
-        <dt>An SLA or a support guarantee</dt>
-        <dd>
-          This is <b>a product under construction</b>. When something breaks there is no queue to
-          escalate to — only the person who wrote it.
-        </dd>
-      </div>
-      <div class="nc">
-        <dt>Settled pricing</dt>
-        <dd>
-          <b>Nothing is being sold here.</b> What this costs, if anything, is a conversation for
-          when there is something to install.
-        </dd>
-      </div>
-      <div class="nc">
-        <dt>A stable product underneath you</dt>
-        <dd>
-          Interfaces, defaults and whole features <b>will change while you are using it</b>. That is
-          the trade: you get to shape them, and you carry the churn of them moving.
-        </dd>
-      </div>
-    </dl>
-
-    <p class="dp-fit">
-      <b>Who it suits.</b> Businesses with repetitive back-office work — finance ops, vendor
-      management, reporting — where the same job comes round every week and somebody senior is
-      still doing it by hand.
-    </p>
-
-    <!-- Three ways to start, all upgraded from assets/cta.js. Each carries an
-         in-page fallback and a readable label, so with scripting off this is
-         three working links to the contact section rather than three dead ones. -->
-    <div class="dp-start">
-      <p>This starts as a conversation, not a signup. Whichever is easiest:</p>
-      <div class="dp-links">
-        <a class="dp-link" data-cta data-cta-subject="partner" data-cta-addr href="#contact">Email</a>
-        <a class="dp-link" data-wa data-cta-subject="partner" href="#contact">WhatsApp</a>
-        <a class="dp-link" data-tel data-tel-show href="#contact">Phone</a>
-      </div>
+      <!-- What is not on offer, stated in the same voice as what is. -->
+      <div class="dp-sub">What you don't get</div>
+      <dl class="nc-list">
+        <div class="nc">
+          <dt>An SLA or a support guarantee</dt>
+          <dd>This is <b>a product under construction</b>. When something breaks there is no queue to escalate to — only the person who wrote it.</dd>
+        </div>
+        <div class="nc">
+          <dt>Settled pricing</dt>
+          <dd><b>Nothing is being sold here.</b> What this costs, if anything, is a conversation for when there is something to install.</dd>
+        </div>
+        <div class="nc">
+          <dt>A stable product underneath you</dt>
+          <dd>Interfaces, defaults and whole features <b>will change while you are using it</b>. You get to shape them, and you carry the churn.</dd>
+        </div>
+      </dl>
     </div>
   </div>
 </section>
 
 
-<!-- ===== 7. CLOSING CTA =========================================== -->
-<section class="cta" id="contact">
+<!-- ===== 7. STRAIGHT ANSWERS ======================================
+     The launch brief's own "Accuracy notes" plus the claims the README records
+     as cut. Rendered rather than omitted: an absent limitation reads as a
+     limitation that does not exist. -->
+<section class="band inset" id="limits">
   <div class="wrap">
-
-    <!-- These five are the launch brief's own "Accuracy notes" plus the two claims the
-         README records as cut for lack of support in the code. They are rendered rather
-         than omitted: an absent limitation reads as a limitation that does not exist. -->
-    <dl class="nc-list" style="text-align:left;margin-bottom:56px">
-      <div class="nc">
-        <dt>Semantic search</dt>
-        <dd>
-          Knowledge-vault retrieval is <b>keyword and frontmatter based</b>. It is not
-          embeddings-based semantic search yet.
-        </dd>
-      </div>
-      <div class="nc">
-        <dt>Headless background service</dt>
-        <dd>
-          Scheduled workflows fire <b>while the app is resident in your system tray</b>. It is not a
-          service that runs without it.
-        </dd>
-      </div>
-      <div class="nc">
-        <dt>Multi-tenant enterprise layer</dt>
-        <dd>It is <b>single-user and local</b> today. There is no shared or multi-tenant deployment.</dd>
-      </div>
-      <div class="nc">
-        <dt>Native first-party integrations</dt>
-        <dd>
-          Connectors are <b>MCP servers you register yourself</b>. SIGMORA does not ship its own
-          OAuth clients for Gmail, Slack or Sheets.
-        </dd>
-      </div>
-      <div class="nc">
-        <dt>Available now</dt>
-        <dd>
-          <b>In active development</b>, built against real day-to-day work rather than a demo
-          dataset. There is no public download.
-        </dd>
-      </div>
-    </dl>
-
-    <h2>An early look, not generally available yet.</h2>
-    <p>
-      Built solo, against real work rather than a demo dataset. There is no installer to hand you
-      today. If it looks like it would fit what you do, say hello — I'll get in touch when there is
-      something to install.
-    </p>
-    <p class="sig">
-      <span class="sig-name">Kartikay Khandelwal</span>
-      <span class="sig-role">Founder &amp; CEO</span>
-    </p>
-    <div class="btnrow">
-      <a class="btn btn-1" data-cta href="#contact">Request early access</a>
-      <a class="btn btn-2" href="/use-cases">Browse the use cases</a>
+    <div class="band-head reveal">
+      <div class="eyebrow">Straight answers</div>
+      <h2>What it <span class="em">doesn't do yet.</span></h2>
+      <p>Worth knowing before you ask for access.</p>
     </div>
-    <a class="cta-addr" data-cta data-cta-addr href="#contact"></a>
+    <dl class="limits reveal">
+      <div class="limit"><span class="tag">Not yet</span><dt>Semantic search</dt><dd>Vault retrieval is <b>keyword and frontmatter based</b>, not embeddings-based semantic search.</dd></div>
+      <div class="limit"><span class="tag">Not yet</span><dt>Headless background service</dt><dd>Scheduled workflows fire <b>while the app is in your system tray</b>, not as a service without it.</dd></div>
+      <div class="limit"><span class="tag">Not yet</span><dt>Multi-tenant enterprise layer</dt><dd>It is <b>single-user and local</b> today. No shared or multi-tenant deployment.</dd></div>
+      <div class="limit"><span class="tag">Not yet</span><dt>Native first-party integrations</dt><dd>Connectors are <b>MCP servers you register yourself</b>. No first-party OAuth clients for Gmail, Slack or Sheets.</dd></div>
+      <div class="limit"><span class="tag">Not yet</span><dt>Public download</dt><dd><b>In active development</b>, built against real day-to-day work rather than a demo dataset.</dd></div>
+    </dl>
+  </div>
+</section>
+
+
+<!-- ===== 8. CLOSING CTA =========================================== -->
+<section class="final" id="contact">
+  <div class="wrap">
+    <div class="final-panel reveal">
+      <h2>Put an agent org <span class="em">to work on your business.</span></h2>
+      <p>
+        Built solo, against real work rather than a demo dataset. There is no installer to hand you
+        today — if it looks like it would fit what you do, say hello and I'll get in touch when there
+        is something to install.
+      </p>
+      <div class="btnrow">
+        <a class="btn btn-1" data-cta href="#contact">Request early access <span class="arr">&rarr;</span></a>
+        <a class="btn btn-2" href="/use-cases">Browse the use cases</a>
+      </div>
+      <a class="cta-addr" data-cta data-cta-addr href="#contact"></a>
+      <p class="sig">
+        <span class="sig-name">Kartikay Khandelwal</span>
+        <span class="sig-role">Founder &amp; CEO</span>
+      </p>
+    </div>
   </div>
 </section>
 
@@ -621,7 +569,6 @@
   <div class="wrap foot">
     <span>SIGMORA Agentic OS</span>
     <span>Local-first &middot; Auditable &middot; Privacy by design</span>
-    <span>Kartikay Khandelwal &middot; Founder &amp; CEO</span>
     <span class="sp"><a href="/use-cases">Use cases</a></span>
     <span><a data-cta data-cta-subject="hello" href="#contact">Contact</a></span>
     <span><a data-wa data-cta-subject="hello" href="#contact">WhatsApp</a></span>
@@ -629,8 +576,8 @@
 </footer>
 
 
-<!-- Connector catalogue. Synced from the product source; see scripts/sync-connectors.mjs
-     and the _source block for provenance. Do not hand-edit. -->
+<!-- Connector catalogue. Synced from the product source; see the _source block
+     for provenance. Do not hand-edit. -->
 <script type="application/json" id="connector-data">
 {
   "_source": {
@@ -655,8 +602,7 @@
 </script>
 
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year,
-     and this file holds the contact address. Bump ?v= when CONTACT changes, or the
-     old address survives in visitors' caches long after the edit. -->
+     and this file holds the contact address. -->
 <script src="/assets/cta.js?v=3"></script>
 
 <script>
@@ -726,7 +672,7 @@
     ['mkt', 'sal', 'fin', 'wrk'].forEach(function (e) { edgeClass(e, 'settled'); });
     show('wrk'); show('out');
     status.textContent = 'Done. Every department reported back, and the lead synthesised one deliverable.';
-    btn.textContent = 'Reset';
+    btn.textContent = 'Run it again';
     btn.disabled = false;
   }
 
@@ -769,29 +715,89 @@
     SCRIPT.forEach(function (step) { timers.push(setTimeout(step[1], step[0])); });
   }
 
-  btn.addEventListener('click', function () {
-    if (btn.textContent === 'Reset') { fig.removeAttribute('data-armed'); reset(); return; }
-    run();
-  });
+  btn.addEventListener('click', run);
+
+  // Play once, the first time the console is mostly on screen. A reader who asked
+  // for less motion gets the finished tree and the button, nothing plays by itself.
+  if (!reduce && 'IntersectionObserver' in window) {
+    var auto = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { auto.disconnect(); setTimeout(run, 500); }
+    }, { threshold: 0.55 });
+    auto.observe(fig);
+  }
 
   btn.hidden = false;   // only now is there something for it to do
 })();
 </script>
 
 <script>
+/* Connectors: rendered from the JSON above. textContent only, so a blurb can
+   never inject markup. The monogram is the label's first letter — no logos,
+   which would imply a first-party integration the product does not ship. */
 (function () {
   var el = document.getElementById('connector-data');
   var host = document.getElementById('conns');
   if (!el || !host) return;
   var data = JSON.parse(el.textContent);
-  host.innerHTML = data.connectors.map(function () {
-    return '<div class="conn"><b></b><span></span></div>';
-  }).join('');
-  // Set text via textContent so a blurb can never inject markup.
-  Array.prototype.forEach.call(host.children, function (node, i) {
-    node.querySelector('b').textContent = data.connectors[i].label;
-    node.querySelector('span').textContent = data.connectors[i].blurb;
+  data.connectors.forEach(function (c) {
+    var node = document.createElement('div');
+    node.className = 'conn';
+    node.innerHTML = '<i aria-hidden="true"></i><div><b></b><span></span></div>';
+    node.querySelector('i').textContent = c.label.charAt(0);
+    node.querySelector('b').textContent = c.label;
+    node.querySelector('span').textContent = c.blurb;
+    host.appendChild(node);
   });
+})();
+</script>
+
+<script>
+/* Page chrome: nav state, mobile menu, scroll reveals. All additive. */
+(function () {
+  var nav = document.getElementById('nav');
+  var btn = document.getElementById('menu-btn');
+
+  // Hairline under the nav once the page has moved.
+  var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Mobile menu: a disclosure, closed by picking a link or pressing Escape.
+  btn.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  nav.querySelectorAll('.navlinks a').forEach(function (a) {
+    a.addEventListener('click', function () { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && nav.classList.contains('open')) { nav.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+  });
+
+  var reveals = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+
+  // Reveal once, a little before the element is fully on screen.
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(function (el) { io.observe(el); });
+
+  // Highlight the nav link for the section being read.
+  var links = {};
+  nav.querySelectorAll('.navlinks a[href^="/#"]').forEach(function (a) { links[a.getAttribute('href').slice(2)] = a; });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var a = links[e.target.id];
+      if (a) a.classList.toggle('on', e.isIntersecting);
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
 })();
 </script>
 
