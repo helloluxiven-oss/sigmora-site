@@ -12,7 +12,7 @@
  * fails if they have drifted, so a typo in one cannot survive a commit.
  */
 (function () {
-  var CONTACT = 'helloluxiven@gmail.com';
+  var CONTACT = 'sigmoraagenticos@gmail.com';
   var PHONE = {
     display: '+91 94137 37872',   // what a reader sees
     tel: '+919413737872',         // tel: — E.164, country code, no spaces
