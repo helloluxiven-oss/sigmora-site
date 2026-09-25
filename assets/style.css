@@ -1,46 +1,47 @@
-/* SIGMORA marketing site — shared styles.
+/* SIGMORA marketing site — shared styles (both pages).
 
-   Palette, type scale and radii are read out of design-reference/ so the site and
-   the desktop app read as one product rather than two. Values only: every figure,
-   label and name in those reference files is a placeholder and none of them travel.
+   Palette is read out of design-reference/ so the site and the desktop app read as
+   one product. Values only: no figure, label or name from those files travels.
 
-   Source for each group is noted beside it. The reference files are app-scale
-   (9px micro-labels, 12px body); the ratios are kept and the absolute sizes are
-   stepped up for a page read at arm's length rather than in a window. */
+   v5: the product-first redesign. The hero carries the live org, sections are
+   cards rather than prose bands, and motion is additive — every reveal is gated on
+   html.js and on prefers-reduced-motion, so with either off the page is simply
+   there, finished. */
 
 :root{
-  /* Surfaces — design-reference/01-dashboard-and-sidebar.html body/.sg-wrap/.sg-side/.sg-card */
-  --bg:#07070d;          /* page */
-  --panel:#0a0a11;       /* nav, footer, inset bands */
-  --band:#0d0d14;        /* alternating section */
-  --card:#10101c;
+  /* Surfaces */
+  --bg:#06060b;
+  --panel:#0a0a11;
+  --band:#0b0b13;
+  --card:#0f0f1a;
   --card-hover:#141426;
   --card-2:#12121f;
 
-  /* Rules — .sg-wrap #23233a outer, .sg-side #1e1e30 divider, .sg-nrow #1a1a2b row */
+  /* Rules */
   --line:#23233a;
-  --line-soft:#1e1e30;
+  --line-soft:#1a1a2b;
   --line-row:#1a1a2b;
   --line-chip:#2a2a45;
 
-  /* Ink — .sg-h h3 #f0f0f7 → .sg-nav #9a9ab5 → .sg-kl #6f6f8c → .sg-lbl #4a4a63 */
-  --ink:#f0f0f7;
+  /* Ink */
+  --ink:#f4f4fa;
   --ink-1:#e2e2ee;
-  --ink-2:#9a9ab5;
-  --ink-3:#6f6f8c;
-  --ink-4:#5c5c78;
+  --ink-2:#a3a3bd;
+  --ink-3:#7a7a96;
+  --ink-4:#65657f;
   --micro:#4a4a63;
 
-  /* Violet — .sg-logo gradient, .sg-btn #7c3aed, .ag-av text #a78bfa, .ag-rep #181830/#322f55 */
-  --accent:#a78bfa;      /* accent AS TEXT: #7c3aed fails contrast on #07070d */
-  --violet:#7c3aed;      /* accent as a FILL */
+  /* Violet — accent AS TEXT is the light one; #7c3aed fails contrast on the page */
+  --accent:#b39dfb;
+  --violet:#7c3aed;
   --violet-lift:#8b5cf6;
-  --violet-bg:#181830;
-  --violet-line:#322f55;
+  --violet-bg:#171530;
+  --violet-line:#352f5e;
+  --glow:rgba(124,58,237,.35);
 
-  /* Green = live / local / verified — .sg-dot.run, .ag-tool #16301f on #22c55e */
+  /* Green = live / local / verified */
   --green:#22c55e;
-  --green-bg:#16301f;
+  --green-bg:#10241a;
   --green-line:#1e3a28;
 
   /* Mini mock-up chrome on the use-cases page */
@@ -48,328 +49,423 @@
   --mini-line:#262640;
 
   --wrap:1180px;
+  --r:16px;
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;scroll-padding-top:76px}
 body{
-  background:var(--bg);
-  color:var(--ink);
-  /* design-reference uses system-ui throughout. Inter is the same idiom and holds
-     up at display sizes, which the app never needs; system-ui backs it up. */
+  background:var(--bg);color:var(--ink);
   font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
-  line-height:1.5;
+  line-height:1.5;overflow-x:hidden;
 }
 a{color:inherit}
+::selection{background:var(--violet);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 
-/* ---------- top nav — .sg-side / .ag-top ---------- */
+/* ---------- nav ---------- */
 .nav{
   display:flex;align-items:center;gap:36px;
-  padding:16px 40px;
-  border-bottom:1px solid var(--line-soft);
-  position:sticky;top:0;background:rgba(10,10,17,.88);
-  backdrop-filter:blur(10px);z-index:20;
+  padding:14px 40px;
+  border-bottom:1px solid transparent;
+  position:sticky;top:0;z-index:30;
+  background:rgba(6,6,11,.72);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  transition:border-color .25s,background .25s;
 }
+.nav.scrolled{border-bottom-color:var(--line-soft);background:rgba(8,8,14,.9)}
 .brand{
-  display:flex;align-items:center;gap:9px;
-  font-size:15px;font-weight:600;letter-spacing:.005em;
+  display:flex;align-items:center;gap:10px;
+  font-size:15px;font-weight:700;letter-spacing:.02em;
   text-decoration:none;color:var(--ink);
 }
-.brand img{width:22px;height:22px;border-radius:7px;display:block}
-.navlinks{display:flex;gap:24px;margin-left:auto;font-size:13.5px;color:var(--ink-2)}
-.navlinks a{padding:6px 2px;text-decoration:none}
-.navlinks a:hover,.navlinks a.on{color:var(--ink)}
+.brand img{width:24px;height:24px;border-radius:7px;display:block}
+.navlinks{display:flex;gap:6px;margin-left:auto;font-size:14px;color:var(--ink-2)}
+.navlinks a{padding:7px 12px;border-radius:8px;text-decoration:none;transition:color .15s,background .15s}
+.navlinks a:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+.navlinks a.on{color:var(--ink);background:rgba(124,58,237,.14)}
 .cta-sm{
-  margin-left:22px;padding:8px 16px;border-radius:8px;
-  background:var(--violet);color:#fff;font-size:13.5px;font-weight:600;
+  margin-left:10px;padding:9px 16px;border-radius:10px;
+  background:var(--violet);color:#fff;font-size:14px;font-weight:600;
   text-decoration:none;white-space:nowrap;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 6px 20px -6px var(--glow);
+  transition:background .15s,transform .15s;
 }
-.cta-sm:hover{background:var(--violet-lift)}
+.cta-sm:hover{background:var(--violet-lift);transform:translateY(-1px)}
+.menu-btn{display:none}
 
-/* ---------- layout + type scale ---------- */
+/* ---------- layout + type ---------- */
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 40px}
-h1{font-size:54px;font-weight:600;letter-spacing:-.03em;line-height:1.07}
-h2{font-size:34px;font-weight:600;letter-spacing:-.022em;line-height:1.18;margin-bottom:14px}
-h3{font-size:19px;font-weight:600;letter-spacing:-.012em;line-height:1.3;margin-bottom:9px}
-.sub{font-size:17px;color:var(--ink-2)}
-
-/* .sg-lbl / .ag-pl: uppercase, heavily tracked, dim. The app sets 9px/.09em; a
-   page is read further away, so the size steps up and the tracking with it. */
-.eyebrow{
-  font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink-4);margin-bottom:14px;font-weight:700;
+h1{font-size:clamp(40px,6vw,72px);font-weight:700;letter-spacing:-.045em;line-height:1.02}
+h2{font-size:clamp(30px,4vw,48px);font-weight:700;letter-spacing:-.035em;line-height:1.08;margin-bottom:16px}
+h1,h2{text-wrap:balance}
+h3{font-size:19px;font-weight:600;letter-spacing:-.015em;line-height:1.3;margin-bottom:8px}
+.em{
+  font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;
+  background:linear-gradient(100deg,#d8ccff 0%,#a78bfa 45%,#8b5cf6 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  padding-right:.06em;
 }
+.sub{font-size:17px;color:var(--ink-2)}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:18px;font-weight:600;
+}
+.eyebrow::before{content:"";width:18px;height:1px;background:currentColor;opacity:.6}
 
 /* ---------- hero ---------- */
-.hero{padding:88px 0 76px;border-bottom:1px solid var(--line-soft)}
-.hero h1{max-width:17ch;margin-bottom:24px}
-.hero .lede{font-size:18px;line-height:1.65;color:var(--ink-2);max-width:64ch}
+.hero{position:relative;padding:72px 0 40px;text-align:center;isolation:isolate;overflow-x:clip}
+.hero::before{
+  /* the grid — masked so it fades out at the edges instead of ending */
+  content:"";position:absolute;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);
+}
+.hero::after{
+  content:"";position:absolute;z-index:-1;left:50%;top:-180px;
+  width:min(1100px,140vw);height:720px;transform:translateX(-50%);
+  background:
+    radial-gradient(closest-side,rgba(124,58,237,.34),transparent 70%),
+    radial-gradient(closest-side at 70% 60%,rgba(34,197,94,.08),transparent 70%);
+  pointer-events:none;
+}
+.hero h1{max-width:16ch;margin:0 auto 22px}
+.hero .lede{font-size:18.5px;line-height:1.6;color:var(--ink-2);max-width:58ch;margin:0 auto}
 .hero .lede strong{color:var(--ink-1);font-weight:600}
 
-/* Status pill — .ag-rep (violet-tinted chip) with the .sg-dot.run pulse */
 .status{
   display:inline-flex;align-items:center;gap:9px;
-  background:var(--violet-bg);border:1px solid var(--violet-line);border-radius:999px;
-  padding:6px 15px 6px 12px;font-size:12.5px;color:var(--accent);font-weight:500;
-  margin-bottom:28px;
+  background:rgba(23,21,48,.7);border:1px solid var(--violet-line);border-radius:999px;
+  padding:7px 16px 7px 12px;font-size:13px;color:var(--accent);font-weight:500;
+  margin-bottom:24px;
 }
 .status .dot{
-  width:6px;height:6px;border-radius:50%;background:var(--green);flex:none;
-  animation:pulse 1.6s infinite;
+  width:7px;height:7px;border-radius:50%;background:var(--green);flex:none;
+  animation:pulse 1.8s infinite;
 }
 @keyframes pulse{
-  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}
-  50%{opacity:.55;box-shadow:0 0 0 4px rgba(34,197,94,0)}
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.55)}
+  50%{opacity:.6;box-shadow:0 0 0 5px rgba(34,197,94,0)}
 }
 
-.btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:32px}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:30px}
+.hero .btnrow,.final .btnrow{justify-content:center}
 .btn{
-  display:inline-block;padding:12px 22px;border-radius:9px;
-  font-size:15px;font-weight:600;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;
+  font-size:15.5px;font-weight:600;text-decoration:none;
+  transition:transform .15s,background .15s,border-color .15s,box-shadow .15s;
 }
-.btn-1{background:var(--violet);color:#fff}
-.btn-1:hover{background:var(--violet-lift)}
-.btn-2{border:1px solid var(--line-chip);color:var(--ink-2)}
-.btn-2:hover{border-color:var(--violet-line);color:var(--ink)}
-.btnnote{font-size:13px;color:var(--ink-4)}
-
-/* ---------- generic band ---------- */
-.band{padding:80px 0;border-bottom:1px solid var(--line-soft)}
-.band.inset{background:var(--band)}
-.band-head{max-width:66ch;margin-bottom:40px}
-.band-head p{font-size:16.5px;color:var(--ink-2);line-height:1.65;margin-top:12px}
-
-/* ---------- grids ---------- */
-.grid{display:grid;gap:14px}
-.g2{grid-template-columns:repeat(2,1fr)}
-.g3{grid-template-columns:repeat(3,1fr)}
-
-.box{
-  border:1px solid var(--line);border-radius:12px;
-  background:var(--card);padding:24px 26px;
+.btn-1{
+  background:linear-gradient(180deg,#8b5cf6,#7c3aed);color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 12px 34px -10px var(--glow);
 }
-.box p{font-size:15px;line-height:1.65;color:var(--ink-2)}
-.box p + p{margin-top:11px}
-.box strong{color:var(--ink-1);font-weight:600}
-.box code{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:13px;color:var(--accent);
-  background:var(--violet-bg);border:1px solid var(--violet-line);
-  padding:1px 6px;border-radius:5px;
-}
+.btn-1:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 16px 44px -10px rgba(124,58,237,.6)}
+.btn-2{border:1px solid var(--line-chip);color:var(--ink-1);background:rgba(255,255,255,.02)}
+.btn-2:hover{border-color:var(--violet-line);background:rgba(124,58,237,.08);transform:translateY(-2px)}
+.btn .arr{transition:transform .15s}
+.btn:hover .arr{transform:translateX(3px)}
+.btnnote{display:block;margin-top:16px;font-size:13.5px;color:var(--ink-4)}
 
-/* Step cards — the left accent rule is .sg-live / .sg-out */
-.step{border-left:2px solid var(--violet)}
-.step .eyebrow{margin-bottom:10px;color:var(--accent)}
+/* ---------- the console (hero product shot) ---------- */
+.console{
+  position:relative;margin:48px auto 0;max-width:1040px;text-align:left;
+  border:1px solid var(--line);border-radius:18px;
+  background:linear-gradient(180deg,rgba(20,20,38,.92),rgba(10,10,17,.97));
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.03) inset,
+    0 40px 120px -40px rgba(124,58,237,.45),
+    0 30px 60px -30px rgba(0,0,0,.8);
+  overflow:hidden;
+}
+.console::before{
+  content:"";position:absolute;left:10%;right:10%;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(179,157,251,.7),transparent);
+}
+.console-bar{
+  display:flex;align-items:center;gap:14px;padding:12px 16px;
+  border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,.015);
+}
+.lights{display:flex;gap:7px}
+.lights i{width:11px;height:11px;border-radius:50%;background:#2a2a42}
+.console-title{font-size:12.5px;color:var(--ink-3);font-weight:500}
+.console-mode{
+  margin-left:auto;display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--green);background:var(--green-bg);
+  border:1px solid var(--green-line);border-radius:999px;padding:4px 11px;
+}
+.console-mode::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.prompt{
+  display:flex;gap:12px;align-items:flex-start;margin:18px 18px 0;
+  padding:14px 16px;border:1px solid var(--violet-line);border-radius:12px;
+  background:rgba(23,21,48,.55);font-size:14.5px;color:var(--ink-1);line-height:1.55;
+}
+.prompt-tag{
+  flex:none;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);padding-top:3px;
+}
+.caret{display:inline-block;width:2px;height:1.05em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
 
 /* ---------- the org, drawn ----------
-   Node chrome, edge colours and the marching-dash idle/flow pair are lifted from
-   design-reference/02-agents-run-replay.html (.ag-n, .ag-n.act, .ag-n.done,
-   .flow, .idle, .doneln). Appearance only — no figure in that file travelled. */
-.orgviz{
-  margin:34px 0 0;border:1px solid var(--line);border-radius:12px;
-  background:radial-gradient(circle at 50% 22%,#12121f 0%,#0d0d14 72%);
-  padding:20px 22px 18px;
-}
-/* Two drawings, one shown at a time — see the comment on the figure in index.html.
-   The stacked one is capped rather than stretched: left to fill an 800px-wide
-   tablet it would render its 12px labels at 30px. */
+   Node chrome, edge colours and the marching-dash pair are lifted from
+   design-reference/02-agents-run-replay.html. Appearance only. */
+.orgviz{margin:0;padding:18px 18px 16px;background:radial-gradient(circle at 50% 30%,rgba(124,58,237,.10),transparent 65%)}
 .orgviz-svg{display:block;width:100%;height:auto}
-.orgviz-wide{max-height:420px}
+.orgviz-wide{max-height:460px}
 .orgviz-tall{display:none;max-width:340px;margin:0 auto}
 
-.ov-edges path{stroke:#26263f;stroke-width:1.4}
-
-/* An edge carrying work downward. */
+.ov-edges path{stroke:#2a2a45;stroke-width:1.4}
 .ov-edges path.flow{
-  stroke:var(--violet);stroke-width:1.8;
-  stroke-dasharray:5 5;animation:ov-march .9s linear infinite;
+  stroke:var(--violet-lift);stroke-width:2;
+  stroke-dasharray:5 5;animation:ov-march .8s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(139,92,246,.8));
 }
-/* An edge carrying a finished result back up. */
-.ov-edges path.settled{stroke:var(--green);stroke-width:1.6;opacity:.6;stroke-dasharray:none;animation:none}
+.ov-edges path.settled{stroke:var(--green);stroke-width:1.7;opacity:.7;stroke-dasharray:none;animation:none}
 @keyframes ov-march{to{stroke-dashoffset:-20}}
 
-.ov-node rect{
-  fill:#141426;stroke:#2a2a45;stroke-width:1;
-  transition:fill .3s,stroke .3s;
-}
+.ov-node rect{fill:#141426;stroke:#2e2e4c;stroke-width:1;transition:fill .3s,stroke .3s}
 .ov-role{fill:var(--ink);font-size:12.5px;font-weight:600;letter-spacing:-.01em}
-.ov-meta{fill:var(--ink-4);font-size:10px;font-weight:500}
-.ov-node[data-state="active"] rect{stroke:var(--violet);fill:#191634}
-.ov-node[data-state="done"] rect{stroke:var(--green);fill:#121f19}
+.ov-meta{fill:var(--ink-3);font-size:10px;font-weight:500}
+.ov-node[data-state="active"] rect{stroke:var(--violet-lift);fill:#1c1840;filter:drop-shadow(0 0 8px rgba(124,58,237,.55))}
+.ov-node[data-state="done"] rect{stroke:var(--green);fill:#10211a}
 .ov-node[data-state="active"] .ov-meta{fill:var(--accent)}
 .ov-node[data-state="done"] .ov-meta{fill:var(--green)}
 
-/* The worker and the deliverable are outcomes of the run, so they start faint and
-   arrive. With scripting off they simply stay visible — the resting state is the
-   finished tree, never a half-drawn one. */
-.ov-worker,.ov-deliverable{transition:opacity .45s,transform .45s}
+.ov-worker,.ov-deliverable{transition:opacity .45s}
 .orgviz[data-armed="1"] .ov-worker,
 .orgviz[data-armed="1"] .ov-deliverable{opacity:0}
 .orgviz[data-armed="1"] .ov-worker[data-shown="1"],
 .orgviz[data-armed="1"] .ov-deliverable[data-shown="1"]{opacity:1}
-.ov-deliverable rect{fill:#10101c;stroke:#262640;stroke-dasharray:4 3}
-.ov-deliverable[data-state="done"] rect{stroke:var(--green);stroke-dasharray:none}
+.ov-deliverable rect{fill:#0f0f1a;stroke:#34345a;stroke-dasharray:4 3}
+.ov-deliverable[data-state="done"] rect{stroke:var(--green);stroke-dasharray:none;filter:drop-shadow(0 0 10px rgba(34,197,94,.35))}
 
-.orgviz-foot{display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap}
+.orgviz-foot{
+  display:flex;align-items:center;gap:16px;margin-top:10px;padding-top:14px;
+  border-top:1px solid var(--line-soft);flex-wrap:wrap;
+}
 .orgviz-btn{
   flex:none;font:inherit;font-size:13.5px;font-weight:600;
   background:var(--violet);color:#fff;border:1px solid var(--violet);
-  border-radius:8px;padding:8px 18px;cursor:pointer;
+  border-radius:9px;padding:8px 18px;cursor:pointer;transition:background .15s;
 }
 .orgviz-btn:hover{background:var(--violet-lift);border-color:var(--violet-lift)}
-.orgviz-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .orgviz-btn[disabled]{opacity:.55;cursor:default}
-.orgviz-status{font-size:13.5px;color:var(--ink-3);line-height:1.55;margin:0}
+.orgviz-status{flex:1;min-width:200px;font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0}
 
-/* Reduced motion: the end state, arrived at instantly. Not a faster animation —
-   no animation. The JS checks the same query and skips every timer. */
-@media(prefers-reduced-motion:reduce){
-  .ov-edges path.flow{animation:none;stroke-dasharray:none}
-  .ov-node rect,.ov-worker,.ov-deliverable{transition:none}
+/* ---------- trust strip ---------- */
+.trust{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:10px 28px;
+  margin:44px auto 0;max-width:900px;font-size:14px;color:var(--ink-3);
 }
+.trust span{display:inline-flex;align-items:center;gap:8px}
+.trust svg{width:16px;height:16px;color:var(--accent);flex:none}
 
-@media(max-width:820px){
-  .orgviz{padding:14px 12px 12px}
-  .orgviz-wide{display:none}
-  .orgviz-tall{display:block}
-  /* Authored sizes, and at this breakpoint they are close to the rendered ones:
-     the stacked viewBox is 300 wide and the figure gives it ~305px at 375px. */
-  .ov-role{font-size:15px}
-  .ov-meta{font-size:12px}
+/* ---------- sections ---------- */
+.band{position:relative;padding:120px 0}
+.band.inset{background:linear-gradient(180deg,transparent,var(--band) 12%,var(--band) 88%,transparent)}
+.band-head{max-width:720px;margin-bottom:56px}
+.band-head.center{text-align:center;margin-left:auto;margin-right:auto}
+.band-head p{font-size:18px;color:var(--ink-2);line-height:1.6;margin-top:8px}
+
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+
+.box{
+  position:relative;border:1px solid var(--line);border-radius:var(--r);
+  background:linear-gradient(180deg,var(--card-2),var(--card));
+  padding:28px;overflow:hidden;transition:border-color .2s;
 }
+.box:hover{border-color:var(--violet-line)}
+.box p{font-size:15.5px;line-height:1.65;color:var(--ink-2)}
+.box p + p{margin-top:12px}
+.box strong{color:var(--ink-1);font-weight:600}
+.box code{
+  font-family:var(--mono);font-size:13px;color:var(--accent);
+  background:var(--violet-bg);border:1px solid var(--violet-line);
+  padding:1px 6px;border-radius:5px;
+}
+.ico{
+  width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+  background:var(--violet-bg);border:1px solid var(--violet-line);color:var(--accent);
+  margin-bottom:22px;
+}
+.ico svg{width:22px;height:22px}
+.ico.g{background:var(--green-bg);border-color:var(--green-line);color:var(--green)}
 
-/* ---------- demo frame ---------- */
-/* 16:9 is the frame's own aspect-ratio below, not a measurement of anything. */
+.step .kicker{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px}
+.rails-head{margin:72px 0 24px}
+.rails-head h3{font-size:24px;letter-spacing:-.02em}
+.rails-head p{color:var(--ink-2);font-size:16px}
+
+/* ---------- demo ---------- */
 .demo-frame{
   position:relative;aspect-ratio:16/9;width:100%;
-  background:radial-gradient(circle at 50% 30%,#12121f 0%,#0d0d14 70%);
-  border:1px dashed var(--line-chip);border-radius:12px;
-  display:grid;place-items:center;text-align:center;overflow:hidden;
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#0d0d14;
+  box-shadow:0 40px 100px -40px rgba(124,58,237,.5),0 0 0 1px rgba(255,255,255,.03) inset;
 }
-/* A real <video>/<iframe> dropped in here inherits the box: no layout change. */
-.demo-frame > video,.demo-frame > iframe{
-  width:100%;height:100%;border:0;display:block;object-fit:cover;
-}
-.demo-tag{
-  position:absolute;top:12px;left:14px;
-  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
-  color:var(--accent);background:var(--violet-bg);
-  border:1px solid var(--violet-line);border-radius:5px;padding:4px 9px;
-}
-.demo-mid{padding:24px;max-width:52ch}
-.demo-play{
-  width:52px;height:52px;border-radius:50%;margin:0 auto 18px;
-  background:var(--violet-bg);border:1px solid var(--violet-line);
-  display:grid;place-items:center;font-size:15px;color:var(--accent);
-}
-.demo-mid b{display:block;font-size:16px;font-weight:600;color:var(--ink-1);margin-bottom:8px}
-.demo-mid p{font-size:14px;line-height:1.6;color:var(--ink-3)}
-/* Sits directly under the frame, ahead of the longer note — the same standing
-   caveat the use-cases panels carry, in the one place a guard cannot check. */
-.demo-cap{
-  margin-top:12px;font-size:13px;color:var(--ink-4);line-height:1.6;
-}
+.demo-frame > video,.demo-frame > iframe{width:100%;height:100%;border:0;display:block;object-fit:cover}
+.demo-cap{margin-top:14px;font-size:13px;color:var(--ink-4);line-height:1.6;text-align:center}
 .demo-note{
-  margin-top:20px;font-size:13.5px;color:var(--ink-3);line-height:1.65;
-  border-left:2px solid var(--line);padding-left:14px;max-width:74ch;
+  margin:28px auto 0;max-width:760px;font-size:15px;color:var(--ink-2);line-height:1.7;
+  padding:20px 24px;border:1px solid var(--line-soft);border-radius:14px;background:rgba(255,255,255,.015);
 }
-.demo-note b{color:var(--ink-2);font-weight:600}
+.demo-note b{color:var(--ink-1);font-weight:600}
+.demo-note em{color:var(--ink-1)}
 
-/* ---------- rails list ---------- */
+/* ---------- rails (definition lists) ---------- */
 .rails{display:flex;flex-direction:column;border-top:1px solid var(--line-soft)}
-.rail{
-  display:grid;grid-template-columns:250px 1fr;gap:30px;
-  padding:20px 4px;border-bottom:1px solid var(--line-soft);
-}
-.rail dt{font-size:15px;color:var(--ink-1);font-weight:600}
-.rail dd{font-size:15px;color:var(--ink-2);line-height:1.65}
+.rail{display:grid;grid-template-columns:260px 1fr;gap:30px;padding:22px 4px;border-bottom:1px solid var(--line-soft)}
+.rail dt{font-size:15.5px;color:var(--ink-1);font-weight:600}
+.rail dd{font-size:15.5px;color:var(--ink-2);line-height:1.65}
 
-/* ---------- connectors ---------- */
-.conns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+/* ---------- local-first bento ---------- */
+.bento{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.bento .wide{grid-column:1 / -1}
+.switch{
+  display:flex;align-items:center;gap:14px;margin:0 0 22px;padding:14px 16px;
+  border:1px solid var(--green-line);border-radius:12px;background:var(--green-bg);
+  font-size:14px;color:var(--ink-1);font-weight:600;
+}
+.switch .track{
+  position:relative;width:42px;height:24px;border-radius:999px;background:var(--green);flex:none;
+  box-shadow:0 0 16px rgba(34,197,94,.45);
+}
+.switch .track::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.switch small{margin-left:auto;font-size:12px;font-weight:500;color:var(--green)}
+
+.conns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
 .conn{
-  border:1px solid var(--line);border-radius:10px;background:var(--card);
-  padding:14px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  border:1px solid var(--line-soft);border-radius:12px;background:rgba(255,255,255,.015);
+  padding:14px;transition:border-color .2s,background .2s;
 }
-.conn b{display:block;font-size:14px;font-weight:600;margin-bottom:4px;color:var(--ink-1)}
-.conn span{font-size:13px;color:var(--ink-4);line-height:1.5}
-.provenance{
-  margin-top:20px;font-size:13.5px;color:var(--ink-3);line-height:1.65;
-  border-left:2px solid var(--line);padding-left:14px;
+.conn:hover{border-color:var(--violet-line);background:rgba(124,58,237,.05)}
+.conn i{
+  flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;
+  font-style:normal;font-size:13px;font-weight:700;color:var(--accent);
+  background:var(--violet-bg);border:1px solid var(--violet-line);
 }
+.conn b{display:block;font-size:14px;font-weight:600;margin-bottom:3px;color:var(--ink-1)}
+.conn span{font-size:13px;color:var(--ink-3);line-height:1.5}
+.provenance{font-size:14px;color:var(--ink-3);line-height:1.65}
 
 /* ---------- use-case picks ---------- */
 .pick{
-  border:1px solid var(--line);border-radius:12px;background:var(--card);
-  padding:22px 24px;display:flex;flex-direction:column;
-  text-decoration:none;transition:border-color .18s,background .18s;
+  position:relative;border:1px solid var(--line);border-radius:var(--r);
+  background:linear-gradient(180deg,var(--card-2),var(--card));
+  padding:26px;display:flex;flex-direction:column;text-decoration:none;overflow:hidden;
+  transition:border-color .2s,transform .2s;
 }
-.pick:hover{border-color:var(--violet-line);background:var(--card-hover)}
+.pick::after{
+  content:"";position:absolute;inset:auto -30% -60% -30%;height:70%;
+  background:radial-gradient(closest-side,rgba(124,58,237,.25),transparent);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+.pick:hover{border-color:var(--violet-line);transform:translateY(-4px)}
+.pick:hover::after{opacity:1}
 .pick .dept{
-  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
-  color:var(--ink-4);margin-bottom:12px;
+  align-self:flex-start;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  color:var(--accent);background:var(--violet-bg);border:1px solid var(--violet-line);
+  border-radius:999px;padding:4px 10px;margin-bottom:18px;
 }
 .pick h3{margin-bottom:10px}
-.pick p{font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.pick p{font-size:15px;line-height:1.6;color:var(--ink-2)}
+.pick .go{margin-top:auto;padding-top:20px;font-size:14px;font-weight:600;color:var(--accent)}
 .morelink{
-  display:inline-flex;align-items:center;gap:8px;margin-top:26px;
-  font-size:15px;font-weight:600;color:var(--accent);text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;margin-top:30px;
+  font-size:15.5px;font-weight:600;color:var(--accent);text-decoration:none;
 }
 .morelink:hover{color:var(--ink)}
 .morelink span{transition:transform .18s}
 .morelink:hover span{transform:translateX(3px)}
 
-/* ---------- "not claimed" band ---------- */
-.notclaimed{background:var(--band)}
-.nc-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.nc{
-  display:grid;grid-template-columns:1fr 1.6fr;gap:30px;
-  padding:18px 4px;border-bottom:1px solid var(--line);
+/* ---------- design partners ---------- */
+.dp{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:start}
+.dp .band-head{margin-bottom:0}
+.dp-fit{
+  margin-top:28px;font-size:16px;line-height:1.7;color:var(--ink-2);
+  border-left:2px solid var(--violet);padding-left:16px;
 }
-.nc dt{font-size:15px;color:var(--ink-4);text-decoration:line-through;text-decoration-color:var(--micro)}
+.dp-fit b{color:var(--ink-1);font-weight:600}
+.dp-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.dp-list li{
+  display:grid;grid-template-columns:28px 1fr;gap:14px;padding:18px 20px;
+  border:1px solid var(--line);border-radius:14px;background:var(--card);
+}
+.dp-list .tick{
+  width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  background:var(--green-bg);border:1px solid var(--green-line);color:var(--green);
+}
+.dp-list .tick svg{width:14px;height:14px}
+.dp-list b{display:block;font-size:15.5px;color:var(--ink-1);margin-bottom:4px}
+.dp-list span{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.dp-sub{margin:40px 0 14px;font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4)}
+.dp-start{margin-top:34px}
+.dp-start p{font-size:16px;color:var(--ink-2);margin-bottom:14px}
+.dp-links{display:flex;gap:10px;flex-wrap:wrap}
+.dp-link{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:11px;
+  border:1px solid var(--line-chip);color:var(--ink-1);background:rgba(255,255,255,.02);
+  font-size:15px;font-weight:600;text-decoration:none;
+  transition:border-color .18s,background .18s,transform .18s;
+}
+.dp-link svg{width:16px;height:16px;color:var(--accent);flex:none}
+.dp-link:hover{border-color:var(--violet-line);background:rgba(124,58,237,.08);transform:translateY(-2px)}
+
+/* ---------- "not claimed" lists ---------- */
+.nc-list{display:flex;flex-direction:column;border-top:1px solid var(--line-soft)}
+.nc{display:grid;grid-template-columns:1fr 1.6fr;gap:30px;padding:18px 4px;border-bottom:1px solid var(--line-soft)}
+.nc dt{font-size:15px;color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--micro)}
 .nc dd{font-size:15px;color:var(--ink-2);line-height:1.65}
 .nc dd b{color:var(--ink-1);font-weight:600}
 
-/* ---------- closing CTA ---------- */
-.cta{padding:88px 0;text-align:center}
-.cta h2{font-size:38px;margin-bottom:16px}
-.cta p{font-size:16.5px;color:var(--ink-2);max-width:56ch;margin:0 auto 14px;line-height:1.65}
-.cta .btnrow{justify-content:center}
-.cta-addr{
-  display:inline-block;margin-top:22px;font-size:14px;color:var(--ink-3);
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+/* The limits, as cards: same content as a list, easier to scan. */
+.limits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.limit{border:1px solid var(--line-soft);border-radius:14px;background:rgba(255,255,255,.015);padding:20px}
+.limit dt{font-size:14.5px;font-weight:600;color:var(--ink-1);margin-bottom:8px}
+.limit .tag{
+  display:inline-block;margin-bottom:12px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 8px;border-radius:6px;color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);
 }
-/* Signature under the closing paragraph. That paragraph is first person, so it
-   reads as unsigned without this — the name is the accountability, not a bio. */
-.cta .sig{margin:26px auto 0;line-height:1.45}
-.sig-name{display:block;font-size:15px;font-weight:600;color:var(--ink-1)}
-.sig-role{
-  display:block;margin-top:3px;font-size:12.5px;color:var(--ink-4);
-  letter-spacing:.04em;text-transform:uppercase;
-}
+.limit dd{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.limit dd b{color:var(--ink-1);font-weight:600}
 
-/* ---------- design partners ---------- */
-.dp-fit{
-  margin-top:36px;font-size:16px;line-height:1.7;color:var(--ink-2);
-  border-left:2px solid var(--violet-line);padding-left:16px;max-width:70ch;
+/* ---------- closing CTA ---------- */
+.final{padding:40px 0 120px}
+.final-panel{
+  position:relative;overflow:hidden;text-align:center;
+  border:1px solid var(--violet-line);border-radius:28px;padding:84px 40px;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 0%,rgba(124,58,237,.35),transparent 70%),
+    linear-gradient(180deg,#110f24,#0a0a12);
 }
-.dp-fit b{color:var(--ink-1);font-weight:600}
-/* The digit guard reads style attributes as claims — correctly — so spacing for
-   this section lives here rather than inline. */
-.dp-not{margin-top:44px}
-.dp-start{margin-top:40px}
-.dp-start p{font-size:16px;color:var(--ink-2);margin-bottom:16px}
-.dp-links{display:flex;gap:12px;flex-wrap:wrap}
-/* Three equal ways in — none of them styled as the primary. The point of the
-   section is that any of them is fine, so none of them gets the loud button. */
-.dp-link{
-  display:inline-block;padding:12px 20px;border-radius:9px;
-  border:1px solid var(--line-chip);color:var(--ink-1);
-  font-size:15px;font-weight:600;text-decoration:none;
-  transition:border-color .18s,background .18s,color .18s;
+.final-panel::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000,transparent 70%);
+  mask-image:radial-gradient(ellipse at 50% 0%,#000,transparent 70%);
+  pointer-events:none;
 }
-.dp-link:hover{border-color:var(--violet-line);background:var(--card-hover);color:var(--ink)}
-.dp-link:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.final-panel > *{position:relative}
+.final-panel h2{max-width:18ch;margin-left:auto;margin-right:auto}
+.final p{font-size:18px;color:var(--ink-2);max-width:56ch;margin:0 auto;line-height:1.65}
+.cta-addr{display:inline-block;margin-top:22px;font-size:14px;color:var(--ink-3);font-family:var(--mono);text-decoration:none}
+.cta-addr:hover{color:var(--ink-1)}
+.sig{margin:28px auto 0;line-height:1.45}
+.sig-name{display:block;font-family:var(--serif);font-style:italic;font-size:24px;color:var(--ink-1)}
+.sig-role{display:block;margin-top:2px;font-size:12px;color:var(--ink-4);letter-spacing:.1em;text-transform:uppercase}
 
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line-soft);background:var(--panel);padding:32px 0 44px}
@@ -378,33 +474,70 @@ footer{border-top:1px solid var(--line-soft);background:var(--panel);padding:32p
 .foot a:hover{color:var(--ink-2)}
 .foot .sp{margin-left:auto}
 
+/* ---------- reveal on scroll ----------
+   Only when JS has run (html.js) and the reader has not asked for less motion.
+   Without either, .reveal is plain visible content. */
+@media(prefers-reduced-motion:no-preference){
+  html.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+  html.js .reveal.in{opacity:1;transform:none}
+  html.js .reveal.d1{transition-delay:.08s}
+  html.js .reveal.d2{transition-delay:.16s}
+  html.js .reveal.d3{transition-delay:.24s}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ov-edges path.flow{animation:none;stroke-dasharray:none}
+  .ov-node rect,.ov-worker,.ov-deliverable{transition:none}
+  .caret,.status .dot{animation:none}
+  .btn,.pick,.dp-link,.cta-sm{transition:none}
+}
+
+/* ---------- responsive ---------- */
 @media(max-width:980px){
   .conns,.g3{grid-template-columns:repeat(2,1fr)}
+  .dp{grid-template-columns:1fr;gap:36px}
+  .bento{grid-template-columns:1fr}
 }
 @media(max-width:820px){
-  .nav{padding:14px 22px;gap:16px}
+  .nav{padding:10px 16px;gap:10px}
   .navlinks{display:none}
-  .wrap{padding:0 22px}
-  h1{font-size:36px}
-  h2{font-size:27px}
-  .hero{padding:56px 0 50px}
-  .band{padding:56px 0}
+  .nav .cta-sm{margin-left:auto;padding:11px 14px}
+  .menu-btn{
+    display:grid;place-items:center;width:44px;height:44px;flex:none;
+    border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--ink-1);cursor:pointer;
+  }
+  .menu-btn svg{width:20px;height:20px}
+  .nav.open .navlinks{
+    display:flex;flex-direction:column;gap:2px;position:absolute;left:12px;right:12px;top:calc(100% + 6px);
+    padding:8px;border:1px solid var(--line);border-radius:14px;background:rgba(10,10,17,.98);
+    box-shadow:0 20px 50px -20px #000;
+  }
+  .nav.open .navlinks a{padding:13px 14px;font-size:16px}
+  .wrap{padding:0 16px}
+  .hero{padding:56px 0 24px}
+  .hero .lede{font-size:17px}
+  .console{margin-top:44px;border-radius:14px}
+  .console-title{display:none}
+  .prompt{margin:12px 12px 0;font-size:14px;flex-direction:column;gap:6px}
+  .orgviz{padding:12px 10px}
+  .orgviz-wide{display:none}
+  .orgviz-tall{display:block}
+  .ov-role{font-size:15px}
+  .ov-meta{font-size:12px}
+  .band{padding:80px 0}
+  .band-head{margin-bottom:36px}
+  .band-head p{font-size:16.5px}
   .g2,.g3,.conns{grid-template-columns:1fr}
-  .rail,.nc{grid-template-columns:1fr;gap:7px}
-  .cta h2{font-size:29px}
-  .demo-mid b{font-size:14px}
-  .demo-mid p{font-size:12.5px}
-  .demo-play{width:40px;height:40px;margin-bottom:12px}
-
-  /* Tracked uppercase reads smaller than its size suggests, and 10.5px/10px sit
-     under the floor on a phone. 12px is the floor, not a preference. */
+  .rail,.nc{grid-template-columns:1fr;gap:6px}
+  .box,.pick{padding:22px}
+  .final-panel{padding:56px 20px;border-radius:20px}
   .eyebrow,.pick .dept{font-size:12px}
-
-  /* ~44px of vertical hit area on everything tappable. Padding, so the target
-     grows with the text rather than being a fixed box that stops matching it. */
-  .brand{padding:11px 0}
-  .cta-sm{padding:12px 16px}
+  .brand{padding:10px 0}
   .foot a{display:inline-block;padding:12px 0}
   .orgviz-btn{padding:11px 18px}
   .morelink{padding:11px 0}
+  .hero .btn,.final .btn{width:100%;justify-content:center}
+}
+@media(max-width:380px){
+  .brand span{display:none}
 }
