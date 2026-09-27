@@ -19,12 +19,18 @@
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
      Bump ?v= on every change, AND update scripts/asset-versions.json — check-claims
      section 6 compares the file hash to that record and fails if they disagree. -->
-<link rel="stylesheet" href="/assets/style.css?v=6">
+<link rel="stylesheet" href="/assets/style.css?v=7">
 <!-- Marks the page as scripted before first paint, so scroll reveals can start
      hidden. Without this line running, nothing is ever hidden. -->
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
+
+<!-- Settle lightning: slow violet-to-cyan zigzag bolts, the logo's own gradient,
+     that appear only once the reader stops scrolling down. Decorative only: hidden
+     from assistive tech, never takes a click, and not drawn at all for anyone
+     who has asked for reduced motion. -->
+<canvas class="bolts" id="bolts" aria-hidden="true"></canvas>
 
 <!-- Every CTA below carries data-cta and ships with an in-page href="#contact"
      fallback. assets/cta.js upgrades each to the real mailto from a single CONTACT
@@ -781,6 +787,191 @@
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
+})();
+</script>
+
+<script>
+/* Settle lightning.
+
+   What it does: nothing while the reader is scrolling. When they stop, a slow
+   violet-to-cyan zigzag bolt (the logo's own gradient) crawls down the screen as a
+   bright head with a fading tail, then fades. Nothing flickers or strobes.
+   Start scrolling again and any bolt on screen eases out, so it never moves
+   under the reader's eye.
+
+   What it refuses to do:
+   - run for prefers-reduced-motion (no canvas work at all);
+   - fight the copy: bolts that start over the text column are drawn at a
+     fraction of the strength of those in the margins;
+   - burn a frame when nothing is moving: the loop stops when the last bolt dies. */
+(function () {
+  var cv = document.getElementById('bolts');
+  if (!cv || !cv.getContext) return;
+  var mq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (mq && mq.matches) { cv.remove(); return; }
+
+  var ctx = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  var VIOLET = '#a78bfa', CYAN = '#22d3ee';
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var small = function () { return W < 820; };
+  var bolts = [];
+
+  // A jagged path from above the top edge to below the bottom edge. Steps are
+  // uneven and the sideways kicks alternate, which is what reads as "electric"
+  // rather than as a wobbly line.
+  function makePath(x0) {
+    var pts = [[x0, -30]], x = x0, y = -30, dir = Math.random() < 0.5 ? -1 : 1;
+    var drift = (Math.random() - 0.5) * 0.35;
+    while (y < H + 30) {
+      y += 16 + Math.random() * 30;
+      x += dir * (8 + Math.random() * 26) + drift * 20;
+      dir = -dir;
+      if (Math.random() < 0.18) dir = -dir;       // occasional double kick
+      pts.push([x, y]);
+    }
+    // cumulative lengths, so the head can be placed by distance travelled
+    var len = [0];
+    for (var i = 1; i < pts.length; i++) {
+      var dx = pts[i][0] - pts[i - 1][0], dy = pts[i][1] - pts[i - 1][1];
+      len.push(len[i - 1] + Math.sqrt(dx * dx + dy * dy));
+    }
+    return { pts: pts, len: len, total: len[len.length - 1] };
+  }
+
+  // Start points lean toward the margins, where they cost the copy nothing.
+  function pickX() {
+    var col = Math.min(1180, W) / 2, mid = W / 2;
+    if (!small() && Math.random() < 0.7) {
+      var left = Math.random() < 0.5;
+      var gutter = Math.max(W * 0.22, mid - col + 60);
+      return left ? Math.random() * gutter : W - Math.random() * gutter;
+    }
+    return 20 + Math.random() * (W - 40);
+  }
+
+  function spawn() {
+    if (bolts.length >= (small() ? 3 : 6)) return;
+    var x = pickX();
+    var inText = Math.abs(x - W / 2) < Math.min(560, W / 2 - 40);
+    var path = makePath(x);
+    // a branch off a random joint, short and fainter
+    var branch = null;
+    if (Math.random() < 0.55) {
+      var j = 2 + Math.floor(Math.random() * Math.max(1, path.pts.length / 2));
+      var bp = path.pts[Math.min(j, path.pts.length - 1)];
+      var b = [[bp[0], bp[1]]], bx = bp[0], by = bp[1], bd = Math.random() < 0.5 ? -1 : 1;
+      for (var k = 0; k < 4 + Math.random() * 4; k++) {
+        by += 12 + Math.random() * 18; bx += bd * (10 + Math.random() * 22); bd = Math.random() < 0.7 ? bd : -bd;
+        b.push([bx, by]);
+      }
+      branch = { pts: b, at: path.len[Math.min(j, path.len.length - 1)] };
+    }
+    bolts.push({
+      path: path, branch: branch, head: 0, life: 1,
+      strength: (inText ? 0.45 : 1) * (small() ? 0.65 : 1),
+      speed: 0.85 + Math.random() * 0.3
+    });
+    kick();
+  }
+
+  function strokePath(pts, from, to, lenArr) {
+    ctx.beginPath();
+    var started = false;
+    for (var i = 1; i < pts.length; i++) {
+      var a = lenArr ? lenArr[i - 1] : 0, b = lenArr ? lenArr[i] : 0;
+      if (lenArr && (b < from || a > to)) continue;
+      var p0 = pts[i - 1], p1 = pts[i];
+      var t0 = lenArr ? Math.max(0, (from - a) / (b - a || 1)) : 0;
+      var t1 = lenArr ? Math.min(1, (to - a) / (b - a || 1)) : 1;
+      var x0 = p0[0] + (p1[0] - p0[0]) * t0, y0 = p0[1] + (p1[1] - p0[1]) * t0;
+      var x1 = p0[0] + (p1[0] - p0[0]) * t1, y1 = p0[1] + (p1[1] - p0[1]) * t1;
+      if (!started) { ctx.moveTo(x0, y0); started = true; }
+      ctx.lineTo(x1, y1);
+    }
+    ctx.stroke();
+  }
+
+  function paint(pts, from, to, lenArr, alpha, width) {
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, VIOLET); g.addColorStop(1, CYAN);
+    var core = ctx.createLinearGradient(0, 0, 0, H);
+    core.addColorStop(0, '#ede9fe'); core.addColorStop(1, '#cffafe');
+    ctx.lineJoin = 'miter'; ctx.lineCap = 'round';
+    // wide colour halo: this is what makes it read as the logo's violet and cyan
+    ctx.globalAlpha = alpha * 0.35;
+    ctx.strokeStyle = g; ctx.lineWidth = width * 7;
+    ctx.shadowColor = VIOLET; ctx.shadowBlur = 28;
+    strokePath(pts, from, to, lenArr);
+    // tighter coloured sheath
+    ctx.globalAlpha = alpha * 0.8;
+    ctx.lineWidth = width * 2.6; ctx.shadowColor = CYAN; ctx.shadowBlur = 12;
+    strokePath(pts, from, to, lenArr);
+    // hot, nearly white core, tinted along the same gradient
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = core; ctx.lineWidth = width;
+    strokePath(pts, from, to, lenArr);
+  }
+
+  var running = false, last = 0;
+
+  function frame(t) {
+    var dt = Math.min(48, t - (last || t)); last = t;
+    ctx.clearRect(0, 0, W, H);
+    for (var i = bolts.length - 1; i >= 0; i--) {
+      var b = bolts[i], P = b.path;
+      b.head += 0.22 * dt * b.speed;
+      if (b.fading) b.life -= dt / 350;              // reader is scrolling: ease out of the way
+      else if (b.head > P.total) b.life -= dt / 800;
+      if (b.life <= 0) { bolts.splice(i, 1); continue; }
+
+      var tail = Math.min(P.total, H * 0.45);
+      var s = b.strength * b.life;
+      // the crawling head and its tail, drawn in slices so the tail fades out
+      var slices = 6;
+      for (var k = 0; k < slices; k++) {
+        var to = b.head - (tail / slices) * k, from = to - tail / slices;
+        if (to <= 0) break;
+        paint(P.pts, Math.max(0, from), Math.min(P.total, to), P.len, s * (1 - k / slices) * 0.9, k === 0 ? 2.4 : 1.6);
+      }
+      if (b.branch && b.head > b.branch.at && b.head < b.branch.at + H * 0.6) {
+        paint(b.branch.pts, 0, 0, null, s * 0.3, 1);
+      }
+    }
+    ctx.globalAlpha = 1;
+    if (bolts.length) requestAnimationFrame(frame);
+    else { running = false; last = 0; ctx.clearRect(0, 0, W, H); }
+  }
+
+  function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
+
+  // Scrolling clears the stage; settling after a scroll down lights it.
+  var lastY = window.scrollY, startY = lastY, settle = null, moving = false;
+  window.addEventListener('scroll', function () {
+    if (!moving) {
+      moving = true; startY = lastY;
+      bolts.forEach(function (b) { b.fading = true; });
+    }
+    lastY = window.scrollY;
+    clearTimeout(settle);
+    settle = setTimeout(function () {
+      moving = false;
+      if (lastY - startY > 40) {                     // only after a scroll DOWN
+        spawn();
+        if (!small()) setTimeout(function () { if (!moving) spawn(); }, 450);
+      }
+    }, 220);
+  }, { passive: true });
 })();
 </script>
 
