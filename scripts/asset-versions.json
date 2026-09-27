@@ -1,7 +1,7 @@
 {
   "style.css": {
-    "v": 7,
-    "sha256": "349e77f1f9e7a94918919406b223e9bec757ed52c4b35ff798c24371ab17f66e"
+    "v": 8,
+    "sha256": "59c1334d0861ab572efd0d237f15077beadef000c6d971ceb4ae89503e695bd0"
   },
   "cta.js": {
     "v": 4,
@@ -14,5 +14,9 @@
   "demo-poster.jpg": {
     "v": 1,
     "sha256": "4b4ddd0677e91835b3c8098f65236a55b5ea7525c44629adddf5ef9f1ab5db37"
+  },
+  "demo.webm": {
+    "v": 1,
+    "sha256": "6a9f989410373fb2e62961cb1efc1925f4adcaa7483dc1bf01fa5c3858f995b3"
   }
 }
