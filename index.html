@@ -19,7 +19,7 @@
 <!-- Versioned deliberately: vercel.json caches /assets/* as immutable for a year.
      Bump ?v= on every change, AND update scripts/asset-versions.json — check-claims
      section 6 compares the file hash to that record and fails if they disagree. -->
-<link rel="stylesheet" href="/assets/style.css?v=7">
+<link rel="stylesheet" href="/assets/style.css?v=8">
 <!-- Marks the page as scripted before first paint, so scroll reveals can start
      hidden. Without this line running, nothing is ever hidden. -->
 <script>document.documentElement.classList.add('js')</script>
@@ -236,10 +236,23 @@
          nothing leaves your machine. No autoplay, no loop: it starts when a person
          asks it to. -->
     <div class="demo-frame reveal">
+      <!-- Two encodes of the same silent recording. WebM (VP9) first: smaller, and
+           what Android and desktop Chrome/Firefox play best. MP4 (H.264) second, for
+           Safari and anything that skips WebM. If a source fails to load, the
+           browser moves on to the next one; if neither plays, the link does. -->
       <video controls playsinline preload="metadata"
              poster="/assets/demo-poster.jpg?v=1" width="1280" height="720">
+        <source src="/assets/demo.webm?v=1" type='video/webm; codecs="vp9"'>
         <source src="/assets/demo.mp4?v=1" type="video/mp4">
+        <a href="/assets/demo.mp4?v=1">Download the demo recording</a>
       </video>
+      <!-- One big, obvious tap target. Phones vary in how their built-in video
+           controls respond to a first tap; this button calls play() directly, so
+           the first tap always starts the film. Revealed by script, never shown
+           when there is no script to make it work. -->
+      <button type="button" class="demo-play" id="demo-play" hidden aria-label="Play the demo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      </button>
     </div>
 
     <!-- The recording ends by opening a generated deliverable, and a figure on
@@ -791,6 +804,25 @@
 </script>
 
 <script>
+/* Demo play button: starts the film on the first tap, then gets out of the way.
+   Native controls stay on the video for pausing and seeking. */
+(function () {
+  var btn = document.getElementById('demo-play');
+  var v = document.querySelector('.demo-frame video');
+  if (!btn || !v) return;
+  var sync = function () { btn.hidden = !v.paused; };
+  btn.addEventListener('click', function () {
+    var go = v.play();
+    if (go && go.catch) go.catch(function () { btn.hidden = false; });
+  });
+  v.addEventListener('play', sync);
+  v.addEventListener('pause', sync);
+  v.addEventListener('ended', sync);
+  sync();
+})();
+</script>
+
+<script>
 /* Settle lightning.
 
    What it does: nothing while the reader is scrolling. When they stop, a slow
@@ -925,9 +957,27 @@
 
   var running = false, last = 0;
 
+  // The demo video is a hole in the canvas: no bolt is ever drawn over it, with a
+  // small margin so the glow cannot bleed onto the frame either. A see-through
+  // layer composited over <video> is exactly what some mobile browsers mishandle.
+  var demo = document.querySelector('.demo-frame');
+  var film = demo && demo.querySelector('video');
+  function clipOutDemo() {
+    if (!demo) return;
+    var r = demo.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > H) return;
+    ctx.beginPath();
+    ctx.rect(0, 0, W, H);
+    ctx.rect(r.left - 24, r.top - 24, r.width + 48, r.height + 48);
+    ctx.clip('evenodd');
+  }
+  var filmPlaying = function () { return film && !film.paused && !film.ended; };
+
   function frame(t) {
     var dt = Math.min(48, t - (last || t)); last = t;
     ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    clipOutDemo();
     for (var i = bolts.length - 1; i >= 0; i--) {
       var b = bolts[i], P = b.path;
       b.head += 0.22 * dt * b.speed;
@@ -948,6 +998,7 @@
         paint(b.branch.pts, 0, 0, null, s * 0.3, 1);
       }
     }
+    ctx.restore();
     ctx.globalAlpha = 1;
     if (bolts.length) requestAnimationFrame(frame);
     else { running = false; last = 0; ctx.clearRect(0, 0, W, H); }
@@ -966,12 +1017,15 @@
     clearTimeout(settle);
     settle = setTimeout(function () {
       moving = false;
-      if (lastY - startY > 40) {                     // only after a scroll DOWN
+      if (lastY - startY > 40 && !filmPlaying()) {   // only after a scroll DOWN, never mid-video
         spawn();
-        if (!small()) setTimeout(function () { if (!moving) spawn(); }, 450);
+        if (!small()) setTimeout(function () { if (!moving && !filmPlaying()) spawn(); }, 450);
       }
     }, 220);
   }, { passive: true });
+
+  // Pressing play clears the stage: whatever is on screen eases out.
+  if (film) film.addEventListener('play', function () { bolts.forEach(function (b) { b.fading = true; }); });
 })();
 </script>
 
